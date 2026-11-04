@@ -22,6 +22,17 @@ hashes.add(NETLIFY_BADGE_SCRIPT_HASH);
 const headers=(await readFile(join(root,'_headers'),'utf8')).replace(/script-src [^;]+;/,"script-src 'self' "+[...hashes].join(' ')+';');
 if(/script-src[^;]*'unsafe-inline'/.test(headers))throw new Error('La CSP no debe permitir unsafe-inline para scripts.');
 await writeFile(join(root,'_headers'),headers);
+// Vercel no lee _headers: vercel.json recibe los mismos encabezados, sin el hash del badge que sólo inyecta Netlify.
+const vercelHeaders=[];
+const headerLines=headers.split(/\r?\n/);
+for(const line of headerLines.slice(headerLines.indexOf('/*')+1)){
+  const match=line.match(/^\s+([\w-]+):\s*(.+?)\s*$/);if(!match)break;
+  vercelHeaders.push({key:match[1],value:match[1]==='Content-Security-Policy'?match[2].replace(' '+NETLIFY_BADGE_SCRIPT_HASH,''):match[2]});
+}
+if(!vercelHeaders.some(h=>h.key==='Content-Security-Policy'))throw new Error('_headers: no se encontró la CSP para vercel.json.');
+const vercel=JSON.parse(await readFile(join(root,'vercel.json'),'utf8'));
+vercel.headers=[{source:'/(.*)',headers:vercelHeaders}];
+await writeFile(join(root,'vercel.json'),JSON.stringify(vercel,null,2)+'\n');
 await mkdir(join(root,'dist','legal'),{recursive:true});
 for(const file of ['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg','legal/index.html','_headers','_redirects'])await copyFile(join(root,file),join(root,'dist',file));
 console.log('dist preparado; CSP con '+hashes.size+' hashes. Sin publicación.');

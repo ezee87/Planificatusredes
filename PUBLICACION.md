@@ -6,6 +6,8 @@ Mis bonos: si cambian los textos de `Bonos/*.md`, ejecutar antes `node tools/bui
 
 **La lista siguiente reemplaza las instrucciones antiguas de este archivo:** publicar exclusivamente `dist`, con `index.html`, `commercial.js`, `commercial.css`, `favicon.svg`, `legal/index.html`, `_headers` y `_redirects`. No publicar la raíz, documentos, capturas ni pruebas. Los ZIP anteriores no deben usarse para esta revisión.
 
+Vercel: `vercel.json` publica sólo `dist` (`outputDirectory`), replica las rutas de `_redirects`, reenvía `/netlify-forms` a Netlify Forms y aplica los encabezados de `_headers`; `prepare-dist` regenera esos encabezados sin el hash del badge de Netlify. `.vercelignore` limita lo que se sube a `vercel.json` y `dist`, sin `_headers` ni `_redirects`.
+
 Validar con `node tests/qa-commercial.mjs`, `node tests/qa-file-local.mjs` y `node tests/qa-audit.mjs`. Requieren Node 24 y Chrome en la ruta Windows indicada en las pruebas; usan perfiles temporales y no envían formularios reales.
 
 La CSP ahora usa los hashes de los dos scripts inline propios y el hash exacto del script del badge que Netlify inyecta después del build: `sha256-BkKP2XO6WOEc3kXOiLr2ZoY83hamalKjPY9xBcbXVuw=`. `script-src` no usa `unsafe-inline`; sólo los estilos mantienen esa directiva. No transformar/minificar scripts después de generar los hashes. Verificar las cabeceras efectivas después del despliegue manual.

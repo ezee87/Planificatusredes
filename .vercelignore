@@ -1,0 +1,7 @@
+# Vercel sólo necesita la configuración y la carpeta dist ya preparada.
+/*
+!vercel.json
+!dist
+# Configuración exclusiva de Netlify: no debe publicarse en Vercel.
+dist/_headers
+dist/_redirects

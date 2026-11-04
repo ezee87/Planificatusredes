@@ -16,6 +16,13 @@ export async function verifyRelease({send,evaluate,wait,check,root,port,posted,s
   };
   const html=await readFile(join(root,'dist','index.html'),'utf8');
   const redirects=await readFile(join(root,'dist','_redirects'),'utf8');
+  const vercel=JSON.parse(await readFile(join(root,'vercel.json'),'utf8'));
+  check('Vercel reenvía formularios a Netlify Forms',vercel.rewrites?.some(r=>r.source==='/netlify-forms'&&r.destination==='https://planifica-tus-redes-abcd.netlify.app/'));
+  check('Vercel publica sólo dist',vercel.outputDirectory==='dist');
+  const netlifyRules=[...redirects.matchAll(/^(\/\S+)\s+(\S+)\s+(\d{3})$/gm)].map(([,source,destination,status])=>({source,destination,status:+status}));
+  check('Vercel replica las rutas de _redirects',netlifyRules.length===6&&netlifyRules.every(r=>r.status===200?vercel.rewrites.some(v=>v.source===r.source&&v.destination===r.destination):vercel.redirects.some(v=>v.source===r.source&&v.destination===r.destination&&v.statusCode===r.status)));
+  const netlifyHeaders=[...(await readFile(join(root,'dist','_headers'),'utf8')).matchAll(/^\s+([\w-]+):\s*(.+?)\s*$/gm)].map(([,key,value])=>({key,value:key==='Content-Security-Policy'?value.replace(/ 'sha256-BkKP2XO6WOEc3kXOiLr2ZoY83hamalKjPY9xBcbXVuw='/,''):value}));
+  check('Vercel aplica los encabezados de _headers',vercel.headers?.length===1&&vercel.headers[0].source==='/(.*)'&&JSON.stringify(vercel.headers[0].headers)===JSON.stringify(netlifyHeaders));
   check('Ruta de arrepentimiento unificada',/^\/arrepentimiento\s+https:\/\/planificatusredes\.netlify\.app\/contacto\.html\s+301$/m.test(redirects));
   const statics=await browser(html=>{const d=new DOMParser().parseFromString(html,'text/html');return [...d.querySelectorAll('form[netlify]')].map(f=>({name:f.name,method:f.getAttribute('method'),netlify:f.hasAttribute('netlify'),hp:f.getAttribute('netlify-honeypot'),formName:f.querySelector('[name="form-name"]').value,fields:[...f.querySelectorAll('[name]')].map(x=>x.name),hidden:!!f.closest('[hidden]')}));},html);
   check('Dos declaraciones HTML estaticas unicas',statics.length===2&&new Set(statics.map(f=>f.name)).size===2);
@@ -75,7 +82,7 @@ export async function verifyRelease({send,evaluate,wait,check,root,port,posted,s
     await ready(()=>!qaForm.querySelector('[type=submit]').disabled);
     check('Un solo POST y exito 2xx '+name,posted.length===count+1&&await browser(()=>qaForm.querySelector('.commercial-message').classList.contains('success')));
     const request=posted.at(-1),body=new URLSearchParams(request.body);
-    check('Payload urlencoded completo '+name,request.path==='/'&&request.method==='POST'&&request.type==='application/x-www-form-urlencoded'&&body.get('form-name')===name&&body.get('bot-field')===''&&JSON.stringify([...body.keys()])===JSON.stringify(fields[name])&&body.get('email')==='qa@example.com'&&body.get(name==='planifica-soporte'?'nombre':'identificador-compra')==='Prueba local & + = ñ');
+    check('Payload urlencoded completo '+name,request.path==='/netlify-forms'&&request.method==='POST'&&request.type==='application/x-www-form-urlencoded'&&body.get('form-name')===name&&body.get('bot-field')===''&&JSON.stringify([...body.keys()])===JSON.stringify(fields[name])&&body.get('email')==='qa@example.com'&&body.get(name==='planifica-soporte'?'nombre':'identificador-compra')==='Prueba local & + = ñ');
     await contrast(name+' exito');
     await browser(()=>{qaForm.elements.email.value='qa@example.com';if(qaForm.elements.motivo)qaForm.elements.motivo.selectedIndex=1;if(qaForm.elements.tipo)qaForm.elements.tipo.selectedIndex=1;if(qaForm.elements.descripcion)qaForm.elements.descripcion.value='Prueba de error';});
     setPost(500);await browser(()=>qaForm.requestSubmit());await ready(()=>qaForm.querySelector('.commercial-message').classList.contains('error'));
