@@ -1,0 +1,380 @@
+/* Mis bonos — built on the app's palette, radii, shadows, buttons and fields. */
+@media (max-width:790px) { #mobile-nav { grid-template-columns:repeat(5,minmax(0,1fr)); } }
+@media (max-width:430px) { #mobile-nav { padding-inline:4px; } #mobile-nav .nav-btn { padding-inline:1px; font-size:11.5px; } }
+@media (max-width:360px) { #mobile-nav { padding-inline:2px; column-gap:0; } #mobile-nav .nav-btn { padding-inline:0; font-size:11px; letter-spacing:-.15px; } }
+
+.tone-amber { --tone-bg:#fff0d6; --tone-ink:#7a5219; --tone-wash:#fffaf1; }
+.tone-green { --tone-bg:#e4efe3; --tone-ink:#3b6048; --tone-wash:#f5faf4; }
+.tone-blue { --tone-bg:#e2eef2; --tone-ink:#355f70; --tone-wash:#f4f9fa; }
+.cat-educativo { --cat-bg:#e6f1e5; --cat-ink:#2f6040; --cat-line:#9fc5a6; }
+.cat-interaccion { --cat-bg:#e2eff4; --cat-ink:#2d5e70; --cat-line:#93bccb; }
+.cat-autoridad { --cat-bg:#eeeaf5; --cat-ink:#574877; --cat-line:#b4a8cc; }
+.cat-promocional { --cat-bg:#fff0d6; --cat-ink:#774f17; --cat-line:#e2c089; }
+.cat-confianza { --cat-bg:#f6eae5; --cat-ink:#7b4937; --cat-line:#d7ad9d; }
+
+.bono-root { container:bono / inline-size; display:grid; gap:22px; min-width:0; }
+.bono-root > div { display:grid; gap:22px; min-width:0; }
+.bono-root h2,.bono-root h3,.bono-root h4 { color:var(--ink); }
+.bono-root p { margin:0; }
+
+/* Header and breadcrumb */
+.bono-page-head { min-width:0; }
+.bono-page-head h1 { overflow-wrap:break-word; }
+.bono-breadcrumb ol { display:flex; flex-wrap:wrap; align-items:center; gap:2px 6px; list-style:none; margin:0 0 12px; padding:0; font-size:14px; color:var(--muted); }
+.bono-breadcrumb li { display:flex; align-items:center; gap:6px; min-width:0; }
+.bono-breadcrumb li + li::before { content:"›"; color:#8a9a90; font-weight:700; }
+.bono-crumb { min-height:32px; padding:4px 2px; border:0; background:none; color:var(--primary-dark); font-weight:650; text-decoration:underline; text-decoration-color:#a9c3ae; text-underline-offset:3px; }
+.bono-crumb:hover { color:#244c2d; text-decoration-color:currentColor; }
+.bono-breadcrumb [aria-current] { color:#4f6457; font-weight:650; }
+
+/* Shared pieces */
+.bono-icon { display:grid; place-items:center; flex:none; width:44px; height:44px; border-radius:14px; background:var(--tone-bg,var(--primary-wash)); color:var(--tone-ink,var(--primary-dark)); }
+.bono-icon-lg { width:52px; height:52px; border-radius:16px; }
+.bono-icon-lg svg { width:25px; height:25px; }
+.bono-kicker { font-size:13px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--tone-ink,var(--primary)); }
+.bono-cat { display:inline-flex; align-items:center; width:fit-content; max-width:100%; padding:4px 10px; border-radius:999px; background:var(--cat-bg); color:var(--cat-ink); font-size:13px; font-weight:800; line-height:1.3; }
+.bono-tag { display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border:1px solid var(--line); border-radius:999px; background:#fff; color:#3d5546; font-size:14px; font-weight:700; }
+.bono-tag svg { width:16px; height:16px; color:var(--primary); }
+.bono-section-title { margin:4px 0 14px; font-size:21px; letter-spacing:-.4px; }
+
+/* Rich text from the bonus files */
+.bono-root .bono-list { margin:0 0 14px; padding-left:22px; }
+.bono-list li { margin:5px 0; line-height:1.55; }
+.bono-list li::marker { color:var(--primary); }
+.bono-subhead { margin:22px 0 8px; padding-left:11px; border-left:3px solid #9fc5a6; font-size:16px; font-weight:800; line-height:1.35; color:var(--primary-dark)!important; }
+.bono-subhead:first-child { margin-top:0; }
+.bono-quote { margin:0 0 14px!important; padding:11px 15px; border-left:4px solid var(--primary); border-radius:4px 12px 12px 4px; background:#f3f8f2; color:#2c4535; font-weight:600; }
+.bono-leadin { margin-bottom:6px!important; color:#4a6151; font-weight:700; }
+.bono-note { color:#55685c; font-size:15px; }
+.bono-strong { color:var(--ink); font-weight:750; }
+.bono-slot { padding:0 4px; border-radius:5px; background:#fff0cc; color:#6b4a12; font-weight:700; }
+.bono-sections p,.bono-block p,.bono-intro p,.bono-closing p,.bono-stage-intro p { margin:0 0 12px; max-width:78ch; color:#33463b; line-height:1.6; }
+.bono-sections li,.bono-block li,.bono-intro li,.bono-closing li { max-width:76ch; color:#33463b; }
+
+/* Home */
+.bono-card-grid,.bono-cal-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+.bono-card { display:flex; flex-direction:column; gap:12px; min-width:0; padding:24px; border:1px solid var(--line); border-radius:var(--radius); background:linear-gradient(180deg,var(--tone-wash) 0%,#fff 58%); box-shadow:var(--shadow); }
+.bono-card-top { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.bono-card h2 { margin:4px 0 0; font-size:23px; line-height:1.2; letter-spacing:-.6px; }
+.bono-card > p { color:var(--muted); }
+.bono-facts { display:flex; flex-wrap:wrap; gap:8px; margin:2px 0 8px; padding:0; list-style:none; }
+.bono-facts li { padding:5px 11px; border:1px solid var(--line); border-radius:999px; background:#fff; color:#3f584a; font-size:14px; font-weight:700; }
+.bono-card .btn { margin-top:auto; align-self:flex-start; white-space:normal; text-align:left; }
+
+/* Bono 1 */
+.bono-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 18px; }
+.bono-filters { display:flex; flex-wrap:wrap; gap:8px; }
+.bono-filter { display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:8px 14px; border:1px solid var(--line-strong); border-radius:999px; background:#fff; color:#3f584a; font-weight:700; }
+.bono-filter span { min-width:24px; padding:1px 7px; border-radius:999px; background:var(--cat-bg,#eef3ed); color:var(--cat-ink,#3f584a); font-size:13px; text-align:center; }
+.bono-filter:hover { background:#f5f8f4; }
+.bono-filter[aria-pressed="true"] { border-color:var(--primary); background:var(--primary); color:#fff; }
+.bono-filter[aria-pressed="true"] span { background:rgba(255,255,255,.2); color:#fff; }
+.bono-count { color:var(--muted); font-size:15px; font-weight:650; }
+.bono-idea-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,255px),1fr)); gap:16px; }
+.bono-idea-card { position:relative; display:flex; flex-direction:column; gap:12px; min-width:0; padding:18px 18px 14px; overflow:hidden; border:1px solid var(--line); border-radius:16px; background:#fff; box-shadow:var(--shadow); }
+.bono-idea-card::before { content:""; position:absolute; inset:0 0 auto; height:4px; background:var(--cat-line); }
+.bono-idea-card[hidden] { display:none; }
+.bono-idea-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.bono-idea-top .bono-num { color:var(--cat-ink); font-size:26px; font-weight:800; letter-spacing:-1px; line-height:1; opacity:.8; }
+.bono-idea-card h2 { margin:0; font-size:18px; line-height:1.3; letter-spacing:-.3px; overflow-wrap:break-word; }
+.bono-idea-meta { display:flex; flex-wrap:wrap; gap:6px 16px; margin:0; }
+.bono-idea-meta div { display:flex; gap:6px; font-size:14px; }
+.bono-idea-meta dt { color:var(--muted); }
+.bono-idea-meta dd { margin:0; color:#2f4538; font-weight:700; }
+.bono-more { margin-top:auto; align-self:flex-start; min-height:44px; }
+
+.bono-hero { display:grid; gap:16px; padding:22px 24px; border:1px solid var(--line); border-radius:var(--radius); background:linear-gradient(135deg,var(--cat-bg,#eef5ec) 0%,#fff 70%); box-shadow:var(--shadow); }
+.bono-hero-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.bono-hero-body { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:14px 22px; }
+.bono-hero-text { max-width:640px; color:#465b4e; }
+.bono-hero .btn,.bono-detail-cta .btn { white-space:normal; }
+.bono-toc ol { display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none; }
+.bono-toc button { display:inline-flex; align-items:center; gap:8px; min-height:42px; padding:6px 13px 6px 7px; border:1px solid var(--line); border-radius:12px; background:#fff; color:#3f5a48; font-weight:650; text-align:left; }
+.bono-toc button:not(:has(span)) { padding-left:13px; }
+.bono-toc button span { display:grid; place-items:center; width:28px; height:28px; border-radius:8px; background:var(--primary-wash); color:var(--primary-dark); font-size:14px; font-weight:800; }
+.bono-toc button:hover { border-color:#bcd3bf; background:#f7faf6; }
+.bono-sections { display:grid; gap:16px; }
+.bono-section { padding:24px 26px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); scroll-margin-top:18px; min-width:0; overflow-wrap:break-word; }
+.bono-section > h2 { display:flex; align-items:center; gap:12px; margin:0 0 16px; font-size:21px; letter-spacing:-.4px; }
+.bono-sec-num { display:grid; place-items:center; flex:none; width:34px; height:34px; border-radius:11px; background:var(--primary); color:#fff; font-size:15px; font-weight:800; }
+.bono-section.is-example { border-style:dashed; border-color:#d9d2bd; background:#fffdf8; }
+.bono-ref { display:flex; align-items:flex-start; gap:10px; margin:0 0 16px!important; padding:10px 14px; border-radius:12px; background:#fff3dc; color:#6b4a12!important; font-size:15px; font-weight:650; }
+.bono-ref svg { width:18px; height:18px; margin-top:2px; }
+.bono-two { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.bono-fact { padding:16px 18px; border:1px solid var(--line); border-radius:14px; background:var(--paper-soft); }
+.bono-fact h3,.bono-post-dl dt,.bono-post-dev h4,.bono-cal-meta dt,.bono-cal-facts dt { margin:0 0 6px; color:var(--primary-dark)!important; font-size:12.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+.bono-fact p { margin:0!important; }
+.bono-flow { display:flex; flex-wrap:wrap; gap:12px 30px; margin:0; padding:0; list-style:none; }
+.bono-flow li { position:relative; display:flex; align-items:center; gap:9px; padding:10px 14px 10px 10px; border-radius:12px; background:var(--primary-wash); color:var(--primary-dark); font-weight:750; }
+.bono-flow li:not(:last-child)::after { content:"→"; position:absolute; right:-22px; top:50%; transform:translateY(-50%); color:#6d9476; font-weight:800; }
+.bono-flow-num { display:grid; place-items:center; width:26px; height:26px; border-radius:8px; background:#fff; font-size:13px; }
+.bono-detail-cta { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 18px; padding:18px 22px; border-radius:var(--radius); background:var(--primary-wash); }
+.bono-detail-cta p { color:var(--primary-dark); font-weight:750; }
+.bono-pager { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.bono-pager-btn { display:flex; align-items:center; gap:12px; min-width:0; min-height:66px; padding:14px 16px; border:1px solid var(--line); border-radius:16px; background:#fff; color:var(--text); text-align:left; }
+.bono-pager-btn.is-next { flex-direction:row-reverse; text-align:right; }
+.bono-pager-btn:hover { border-color:#bcd3bf; background:#f7faf6; }
+.bono-pager-btn svg { color:var(--primary); }
+.bono-pager-btn small { display:block; color:var(--muted); font-size:12.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+.bono-pager-btn strong { display:block; font-size:15px; line-height:1.35; overflow-wrap:break-word; }
+
+.bono-others h2 { margin:6px 0 12px; font-size:18px; }
+.bono-others-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.bono-other { display:flex; align-items:center; gap:14px; width:100%; min-width:0; padding:16px; border:1px solid var(--line); border-radius:16px; background:#fff; color:var(--text); text-align:left; }
+.bono-other:hover { border-color:#bcd3bf; background:#f7faf6; }
+.bono-other-text { min-width:0; }
+.bono-other strong { display:block; color:var(--ink); }
+.bono-other small { display:block; color:var(--muted); font-size:14px; }
+.bono-other > svg { margin-left:auto; color:var(--primary); }
+
+/* Bono 2 */
+.bono-intro,.bono-closing { padding:24px 26px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); }
+.bono-intro-compact { padding:18px 22px; box-shadow:none; background:var(--paper-soft); }
+.bono-intro > :last-child,.bono-closing > :last-child,.bono-stage-intro > :last-child { margin-bottom:0; }
+.bono-closing { background:#f3f7f1; border-color:#e0e9dd; box-shadow:none; }
+.bono-closing h2 { margin:0 0 14px; font-size:21px; }
+.bono-feature { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:18px 22px; padding:24px; border-radius:var(--radius); background:var(--primary-dark); color:#fff; box-shadow:0 18px 40px rgba(37,72,48,.18); }
+.bono-feature .bono-icon { background:rgba(255,255,255,.15); color:#fff; }
+.bono-feature h2 { margin:0 0 4px; color:#fff!important; font-size:21px; }
+.bono-feature p { color:#e3eee5; }
+.bono-feature-text { display:grid; gap:8px; min-width:0; }
+.bono-feature-progress { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 8px; }
+.bono-feature-progress strong { font-size:18px; }
+.bono-feature-progress span { color:#e3eee5; font-size:15px; }
+.bono-feature .bono-bar { max-width:420px; background:rgba(255,255,255,.22); }
+.bono-feature .bono-bar span { background:#fff; }
+.bono-feature .btn-primary { background:#fff; color:var(--primary-dark); box-shadow:none; }
+.bono-feature .btn-primary:hover { background:#eef5ee; }
+.bono-feature :focus-visible,.bono-app-callout :focus-visible { outline-color:#fff; }
+.bono-stage-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.bono-stage { display:flex; flex-direction:column; gap:10px; min-width:0; padding:22px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); }
+.bono-stage h3 { margin:0; font-size:21px; letter-spacing:-.4px; }
+.bono-stage-intro p { color:var(--muted); font-size:15px; }
+.bono-tip-links { display:grid; gap:8px; margin:auto 0 0; padding:0; list-style:none; }
+.bono-tip-links button { display:flex; align-items:center; gap:12px; width:100%; min-height:54px; padding:10px 14px 10px 10px; border:1px solid var(--line); border-radius:12px; background:var(--paper-soft); color:var(--ink); font-weight:650; text-align:left; }
+.bono-tip-links button:hover { border-color:#bcd3bf; background:var(--primary-wash); }
+.bono-tip-links button > svg { margin-left:auto; color:var(--primary); width:18px; height:18px; }
+.bono-tip-links .bono-num { display:grid; place-items:center; flex:none; width:32px; height:32px; border-radius:10px; background:var(--primary-wash); color:var(--primary-dark); font-size:14px; font-weight:800; }
+
+.bono-stage-tabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.bono-stage-tabs button { min-width:0; min-height:66px; padding:11px 14px; border:1px solid var(--line); border-radius:14px; background:#fff; color:var(--text); text-align:left; }
+.bono-stage-tabs button:hover { background:#f7faf6; }
+.bono-stage-tabs span { display:block; color:var(--primary); font-size:12.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+.bono-stage-tabs strong { display:block; font-size:15px; line-height:1.3; }
+.bono-stage-tabs [aria-current] { border-color:var(--primary); background:var(--primary-wash); box-shadow:inset 0 0 0 1px var(--primary); }
+.bono-tip-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.bono-tip-chips button { display:inline-flex; align-items:center; gap:8px; min-height:44px; max-width:100%; padding:8px 14px; border:1px solid var(--line-strong); border-radius:999px; background:#fff; color:#3f584a; font-weight:650; text-align:left; }
+.bono-tip-chips button span { color:var(--primary); font-weight:800; }
+.bono-tip-chips [aria-current] { border-color:var(--primary); background:var(--primary); color:#fff; }
+.bono-tip-chips [aria-current] span { color:#fff; }
+.bono-tip { display:grid; gap:16px; }
+.bono-tip-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.bono-block { min-width:0; padding:22px 24px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); overflow-wrap:break-word; }
+.bono-block > h2 { display:flex; align-items:center; gap:11px; margin:0 0 14px; font-size:19px; }
+.bono-block-icon { display:grid; place-items:center; flex:none; width:36px; height:36px; border-radius:11px; background:var(--primary-wash); color:var(--primary-dark); }
+.bono-block-icon svg { width:19px; height:19px; }
+.bono-block > :last-child { margin-bottom:0; }
+.bono-app-callout { display:grid; grid-template-columns:auto minmax(0,1fr); gap:18px; padding:24px 26px; border-radius:var(--radius); background:var(--primary-dark); color:#fff; box-shadow:0 18px 40px rgba(37,72,48,.18); }
+.bono-app-mark { display:grid; place-items:center; width:50px; height:50px; border-radius:15px; background:#fff; color:var(--primary-dark); }
+.bono-app-mark svg { width:26px; height:26px; }
+.bono-app-callout h2 { margin:2px 0 10px; color:#fff!important; font-size:20px; }
+.bono-app-callout p,.bono-app-callout li { margin:0 0 10px; color:#f1f7f2; line-height:1.6; max-width:78ch; }
+.bono-app-callout > div > :last-child { margin-bottom:0; }
+.bono-habit { display:flex; align-items:flex-start; gap:14px; padding:20px 22px; border:1px solid #f0dfba; border-radius:var(--radius); background:#fff8e9; }
+.bono-habit .bono-block-icon { background:#ffecc7; color:#7a5219; }
+.bono-habit h2 { margin:2px 0 4px; color:#6e4a16!important; font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.bono-habit p { color:#3f3218; font-weight:650; line-height:1.55; }
+
+.bono-progress { display:grid; gap:16px; padding:24px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); }
+.bono-progress-head { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:10px 18px; }
+.bono-progress-head h2 { margin:0 0 4px; font-size:22px; }
+.bono-progress-head p { color:var(--muted); }
+.bono-progress-count { display:flex; align-items:baseline; gap:6px; }
+.bono-progress-count strong { color:var(--primary-dark); font-size:40px; font-weight:800; letter-spacing:-1.2px; line-height:1; }
+.bono-progress-count span { color:#506357; font-weight:650; }
+.bono-bar { height:12px; overflow:hidden; border-radius:999px; background:#e6eee5; }
+.bono-bar span { display:block; height:100%; border-radius:inherit; background:linear-gradient(90deg,#6f9a78,var(--primary)); transition:width .3s ease; }
+.bono-progress-foot { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px 18px; }
+.bono-progress-foot p { max-width:640px; color:var(--muted); font-size:14px; }
+.bono-days { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr)); gap:16px; }
+.bono-day { min-width:0; padding:20px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); }
+.bono-day.is-today { border-color:#8fb898; box-shadow:0 0 0 3px #e2eee1,var(--shadow); }
+.bono-day-top { display:flex; align-items:center; gap:8px; }
+.bono-day-name { color:var(--primary); font-size:13px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.bono-today { padding:2px 9px; border-radius:999px; background:var(--primary); color:#fff; font-size:12px; font-weight:800; }
+.bono-day-count { margin-left:auto; padding:3px 10px; border-radius:999px; background:var(--primary-wash); color:#355540; font-size:14px; font-weight:800; }
+.bono-day h2 { margin:8px 0 4px; font-size:19px; }
+.bono-day header p { margin-bottom:10px; color:var(--muted); font-size:15px; }
+.bono-tasks { display:grid; gap:4px; margin:0; padding:0; list-style:none; }
+.bono-task,.bono-review-check { position:relative; display:flex; align-items:flex-start; gap:12px; min-height:44px; padding:10px; border-radius:12px; cursor:pointer; line-height:1.4; }
+.bono-task:hover { background:var(--paper-soft); }
+.bono-task input,.bono-review-check input { position:absolute; top:10px; left:10px; width:24px; height:24px; margin:0; opacity:0; }
+.bono-check { display:grid; place-items:center; flex:none; width:24px; height:24px; border:2px solid #8ea494; border-radius:7px; background:#fff; color:transparent; transition:background .15s ease,border-color .15s ease; }
+.bono-check svg { width:16px; height:16px; stroke-width:3; }
+input:checked + .bono-check { border-color:var(--primary); background:var(--primary); color:#fff; }
+input:focus-visible + .bono-check { outline:3px solid #9fc5a6; outline-offset:2px; }
+.bono-task input:checked ~ span:last-child { color:#5e6f64; text-decoration:line-through; text-decoration-color:#9eb2a3; }
+.bono-back-line { display:flex; }
+
+/* Bono 3 */
+.bono-cal-card .bono-sector { margin-top:4px; color:var(--tone-ink); font-size:14px; font-weight:800; }
+.bono-cal-card h2 { margin:0; }
+.bono-cal-example { color:var(--muted); }
+.bono-cal-facts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:4px 0 8px; }
+.bono-cal-facts div,.bono-cal-meta div { min-width:0; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+.bono-cal-facts dt { font-size:11.5px; margin-bottom:2px; }
+.bono-cal-facts dd { margin:0; color:var(--ink); font-size:15px; font-weight:750; line-height:1.3; }
+.bono-cal-meta { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:10px; margin:0; }
+.bono-cal-meta div { padding:14px; }
+.bono-cal-meta dd { margin:0; color:#2f4538; font-weight:650; line-height:1.45; }
+.bono-week { display:grid; gap:14px; scroll-margin-top:18px; }
+.bono-week > h2 { display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; margin:6px 0 0; font-size:21px; letter-spacing:-.4px; }
+.bono-week-num { padding:4px 11px; border-radius:999px; background:var(--primary); color:#fff; font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.bono-post-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.bono-post { display:flex; flex-direction:column; gap:12px; min-width:0; padding:20px; border:1px solid var(--line); border-radius:var(--radius); background:#fff; box-shadow:var(--shadow); overflow-wrap:break-word; }
+.bono-post-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.bono-day-badge { display:inline-flex; padding:4px 10px; border-radius:8px; background:var(--ink); color:#fff; font-size:13px; font-weight:800; }
+.bono-post-num { color:var(--muted); font-size:13px; font-weight:700; }
+.bono-post h3 { margin:0; font-size:18px; line-height:1.3; letter-spacing:-.3px; }
+.bono-post-dl { display:grid; gap:10px; margin:0; }
+.bono-post-dl dt { margin-bottom:2px; }
+.bono-post-dl dd { margin:0; color:#33463b; font-size:15px; line-height:1.5; }
+.bono-post-dev { padding:14px 16px; border:1px solid var(--line); border-radius:14px; background:var(--paper-soft); }
+.bono-post-dev h4 { margin-bottom:8px; }
+.bono-post-dev p,.bono-post-dev li { margin:0 0 8px; color:#33463b; font-size:15px; line-height:1.5; }
+.bono-post-dev .bono-list { margin-bottom:8px; padding-left:20px; }
+.bono-post-dev > :last-child,.bono-post-dev .bono-list li:last-child { margin-bottom:0; }
+.bono-post-dev .bono-quote { font-size:15px; }
+.bono-cta { display:flex; align-items:baseline; gap:10px; color:var(--ink); font-weight:650; line-height:1.45; }
+.bono-cta span { flex:none; padding:3px 8px; border-radius:6px; background:#fff0d6; color:#774f17; font-size:12px; font-weight:800; letter-spacing:.06em; }
+.bono-post-add { width:100%; margin-top:auto; white-space:normal; }
+
+/* Dialogs */
+.manager-dialog.bono-dialog { width:min(680px,calc(100% - 24px)); }
+.manager-dialog.bono-wizard { width:min(760px,calc(100% - 24px)); }
+.bono-dialog-lead { display:flex; flex-wrap:wrap; align-items:center; gap:8px; color:var(--ink); font-weight:700; margin:0; }
+.bono-form-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 14px; }
+.bono-dialog .field textarea.bono-preview-text { min-height:230px; max-height:none; font-size:15px; }
+.bono-dialog .field [aria-invalid="true"] { border-color:#b64646; }
+.bono-warning { margin:0; padding:10px 14px; border-radius:12px; background:#fff3e2; color:#76470f; font-size:15px; font-weight:600; }
+.bono-info { margin:0; padding:10px 14px; border-radius:12px; background:#ebf4f7; color:#2c5263; font-size:15px; }
+.bono-safe { display:flex; align-items:flex-start; gap:10px; margin:0; padding:12px 14px; border-radius:12px; background:var(--primary-wash); color:var(--primary-dark); font-size:15px; font-weight:600; }
+.bono-safe svg { width:19px; height:19px; margin-top:1px; }
+.bono-step-label { margin:0 0 4px!important; color:var(--primary)!important; font-size:12.5px!important; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.bono-wz-sub { margin:2px 0 0!important; }
+.bono-steps { display:flex; gap:6px; margin:0; padding:12px 26px 0; list-style:none; flex-shrink:0; }
+.bono-steps li { flex:1; height:5px; border-radius:10px; background:var(--line); }
+.bono-steps li.is-done,.bono-steps li.is-current { background:var(--primary); }
+.bono-steps span { display:none; }
+.bono-choices { display:grid; gap:8px; min-width:0; margin:0; padding:0; border:0; }
+.bono-choices legend { margin-bottom:10px; padding:0; color:var(--ink); font-weight:750; }
+.bono-choice { display:flex; align-items:center; gap:12px; min-height:58px; padding:11px 14px; border:1px solid var(--line-strong); border-radius:14px; background:#fff; cursor:pointer; }
+.bono-choice:has(input:checked) { border-color:var(--primary); background:var(--primary-wash); box-shadow:inset 0 0 0 1px var(--primary); }
+.bono-choice input { flex:none; width:20px; height:20px; margin:0; accent-color:var(--primary); }
+.bono-choice > span:last-child { min-width:0; overflow-wrap:anywhere; }
+.bono-choice strong { display:block; color:var(--ink); }
+.bono-choice small { display:block; color:var(--muted); font-size:14px; }
+.bono-dot { flex:none; width:14px; height:14px; border-radius:50%; }
+.bono-choice-icon { display:grid; place-items:center; flex:none; width:36px; height:36px; border:1px solid var(--line); border-radius:11px; background:var(--paper-soft); color:var(--primary-dark); }
+.bono-choice-icon svg { width:18px; height:18px; }
+.bono-none-platform[hidden] { display:none; }
+.bono-review-tools { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:6px 14px; }
+.bono-review-tools p { font-weight:750; color:var(--ink); }
+.bono-review-tools div { display:flex; gap:16px; }
+.bono-review-week { display:grid; gap:8px; }
+.bono-review-week h3 { margin:6px 0 2px; color:var(--primary-dark); font-size:15px; }
+.bono-review-row { display:grid; grid-template-columns:minmax(0,1fr) 172px; align-items:center; gap:4px 12px; padding:6px 12px 6px 4px; border:1px solid var(--line); border-radius:14px; background:#fff; }
+.bono-review-row.is-off { background:var(--paper-soft); }
+.bono-review-row.is-off .bono-review-text strong { color:#56685c; }
+.bono-review-check { min-width:0; }
+.bono-review-text { min-width:0; }
+.bono-review-text small { display:block; color:var(--muted); font-size:13px; font-weight:700; }
+.bono-review-text strong { display:block; color:var(--ink); font-size:15px; line-height:1.35; }
+.bono-review-text > span { display:block; color:var(--muted); font-size:14px; }
+.bono-review-date { gap:3px!important; }
+.bono-review-date label { font-size:13px!important; }
+.bono-review-date input { min-height:42px!important; padding:6px 10px!important; }
+.bono-review-note { grid-column:1/-1; margin:0 0 6px 46px!important; color:#76470f; font-size:14px; }
+.bono-review-note:empty { display:none; }
+.bono-review-note .is-error { color:#a33a3a; font-weight:700; }
+.bono-summary { display:grid; margin:0; overflow:hidden; border:1px solid var(--line); border-radius:14px; }
+.bono-summary div { display:grid; grid-template-columns:170px minmax(0,1fr); gap:12px; padding:12px 14px; border-bottom:1px solid var(--line); }
+.bono-summary div:last-child { border-bottom:0; }
+.bono-summary dt { color:var(--muted); font-weight:700; }
+.bono-summary dd { margin:0; color:var(--ink); font-weight:600; overflow-wrap:anywhere; }
+.bono-done { display:grid; justify-items:center; gap:10px; padding:10px 0; text-align:center; }
+.bono-done-icon { display:grid; place-items:center; width:62px; height:62px; border-radius:50%; background:var(--primary-wash); color:var(--primary); }
+.bono-done-icon svg { width:30px; height:30px; }
+.bono-done h3 { margin:0; font-size:22px; color:var(--ink); }
+.bono-done p { max-width:480px; margin:0; }
+
+/* Onboarding slide */
+.entry-bonos { display:grid; gap:10px; margin:20px 0; }
+.entry-bono { display:flex; align-items:center; gap:14px; padding:14px 16px; border:1px solid var(--line); border-radius:14px; background:var(--paper-soft); }
+.entry-bono-emoji { display:grid; place-items:center; flex:none; width:48px; height:48px; border:1px solid var(--line); border-radius:14px; background:#fff; font-size:25px; line-height:1; }
+.entry-bono h2 { margin:0 0 2px!important; font-size:17px!important; }
+.entry-bono span { color:var(--muted); font-size:15px; }
+.entry-card .entry-actions .btn svg { width:19px; height:19px; }
+
+/* Layout by available width (works with the sidebar expanded or collapsed) */
+@container bono (max-width:999px) {
+  .bono-card-grid,.bono-cal-grid { grid-template-columns:minmax(0,1fr); }
+  .bono-post-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .bono-cal-meta { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .bono-cal-meta .is-goal { grid-column:1/-1; }
+}
+@container bono (min-width:560px) and (max-width:999px) {
+  .bono-home .bono-card { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"top action" "title action" "desc action" "facts action"; align-items:center; column-gap:24px; row-gap:8px; }
+  .bono-home .bono-card-top { grid-area:top; justify-content:flex-start; }
+  .bono-home .bono-card h2 { grid-area:title; }
+  .bono-home .bono-card > p { grid-area:desc; }
+  .bono-home .bono-facts { grid-area:facts; margin-bottom:0; }
+  .bono-home .bono-card .btn { grid-area:action; align-self:center; margin:0; }
+}
+@container bono (max-width:759px) {
+  .bono-stage-grid,.bono-tip-pair,.bono-two { grid-template-columns:minmax(0,1fr); }
+  .bono-stage-tabs { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .bono-feature { grid-template-columns:auto minmax(0,1fr); }
+  .bono-feature .btn { grid-column:1/-1; justify-self:start; }
+  .bono-others-grid { grid-template-columns:minmax(0,1fr); }
+}
+@container bono (max-width:599px) {
+  .bono-post-grid,.bono-pager { grid-template-columns:minmax(0,1fr); }
+  .bono-cal-meta { grid-template-columns:minmax(0,1fr); }
+  .bono-section,.bono-block,.bono-intro,.bono-closing,.bono-hero,.bono-progress,.bono-app-callout { padding:18px; }
+  .bono-card,.bono-stage,.bono-day,.bono-post,.bono-feature { padding:18px; }
+  .bono-section > h2 { font-size:19px; }
+  .bono-hero-body .btn,.bono-detail-cta .btn,.bono-feature .btn,.bono-card .btn { width:100%; }
+  .bono-flow { gap:10px; flex-direction:column; align-items:flex-start; }
+  .bono-flow li:not(:last-child)::after { content:"↓"; right:auto; left:21px; top:auto; bottom:-17px; transform:none; }
+  .bono-flow { gap:14px; }
+  .bono-pager-btn.is-next { flex-direction:row; text-align:left; }
+  .bono-progress-count strong { font-size:34px; }
+  .bono-progress-foot .btn { width:100%; }
+}
+@container bono (max-width:420px) {
+  .bono-stage-tabs { grid-template-columns:minmax(0,1fr); }
+  .bono-stage-tabs button { min-height:0; }
+  .bono-cal-facts { grid-template-columns:minmax(0,1fr); }
+  .bono-cal-facts div { display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .bono-feature { grid-template-columns:minmax(0,1fr); }
+  .bono-app-callout { grid-template-columns:minmax(0,1fr); }
+  .bono-filter { min-height:42px; padding:7px 12px; font-size:15px; }
+  .bono-idea-card h2,.bono-post h3 { font-size:17px; }
+  .bono-card h2 { font-size:21px; }
+}
+@media (max-width:600px) {
+  .bono-form-row { grid-template-columns:minmax(0,1fr); }
+  .bono-review-row { grid-template-columns:minmax(0,1fr); padding:6px 10px 10px 4px; }
+  .bono-review-date { margin-left:46px; }
+  .bono-review-note { margin-left:46px!important; }
+  .bono-summary div { grid-template-columns:minmax(0,1fr); gap:2px; }
+  .bono-steps { padding:10px 14px 0; }
+  .bono-dialog .field textarea.bono-preview-text { min-height:170px; }
+}
+@media (max-width:530px) {
+  .entry-bono { padding:11px 12px; gap:11px; }
+  .entry-bono-emoji { width:42px; height:42px; font-size:22px; }
+  .entry-bonos { margin:14px 0; }
+}
+@media (prefers-reduced-motion:reduce) { .bono-bar span,.bono-check { transition:none; } }

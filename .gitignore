@@ -1,0 +1,22 @@
+# Paquetes y copias locales
+*.zip
+index.v4*-backup.html
+
+# Material privado o de trabajo (no necesario para la app)
+*.docx
+screens/
+planifica-tus-redes-demo.json
+AUDITORIA-TECNICA.md
+CIERRE-FORMS-FOOTER-CONTRASTE.md
+
+# Resultados generados por las pruebas
+tests/*.json
+tests/*.txt
+tests/visual-*/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+node_modules/

@@ -1,0 +1,5 @@
+# Netlify publica la carpeta dist ya preparada (node tools/prepare-dist.mjs).
+# No hay comando de build: dist se genera localmente y se versiona.
+[build]
+  publish = "dist"
+  command = ""
