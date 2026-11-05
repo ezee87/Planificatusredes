@@ -1352,6 +1352,22 @@
     .platform-icon { position:relative; }
     .platform-more { position:absolute; right:-6px; bottom:-6px; min-width:19px; height:19px; padding:0 4px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--primary-dark); font-size:11px; font-weight:800; line-height:17px; text-align:center; }
     .post-meta span.post-networks { white-space:normal; }
+    /* Editor expandible de «Texto de la publicación». */
+    .field-label-row { display:flex; align-items:center; justify-content:space-between; gap:8px; min-width:0; }
+    .text-expand-btn { display:inline-grid; place-items:center; flex:none; width:34px; height:34px; padding:0; border:1px solid var(--line); border-radius:9px; background:#fff; color:var(--primary-dark); cursor:pointer; }
+    .text-expand-btn svg { width:17px; height:17px; }
+    .text-expand-btn:hover { background:var(--primary-wash); border-color:var(--primary); }
+    .text-expand-btn:focus-visible { outline:2px solid #548964; outline-offset:2px; }
+    #item-form #item-text { min-height:140px; overscroll-behavior:contain; }
+    @media(max-width:530px) { #item-form #item-text { min-height:112px; } .text-expand-btn { width:40px; height:40px; } }
+    /* Expanded: the modal takes its maximum height (each breakpoint's max-height still applies) and the
+       textarea fills the body; the header and the footer with Guardar stay visible. */
+    .modal.is-text-expanded { height:100dvh; }
+    .modal.is-text-expanded .modal-body { display:flex; flex-direction:column; flex:1; overflow:hidden; }
+    .modal.is-text-expanded .form-grid { display:flex; flex-direction:column; flex:1; min-height:0; }
+    .modal.is-text-expanded .form-grid > .field:not(#item-text-field) { display:none; }
+    .modal.is-text-expanded #item-text-field { flex:1; min-height:0; }
+    .modal.is-text-expanded #item-form #item-text { flex:1; min-height:0; height:auto; max-height:none; resize:none; overflow-y:auto; }
     /* Diálogo de importación: restauración completa o sólo publicaciones. */
     .import-modes { display:grid; gap:8px; min-width:0; margin:0; padding:0; border:0; }
     .import-modes legend { margin-bottom:8px; padding:0; color:#405d47; font-weight:700; }
@@ -1404,7 +1420,7 @@
     <div class="field"><label for="item-type">Tipo de contenido</label><select id="item-type" name="type"></select></div>
     <div class="field full" id="item-networks-field"><span class="field-label" id="item-networks-label">Redes sociales *</span><div id="item-networks" role="group" aria-labelledby="item-networks-label" aria-describedby="account-hint"></div><p class="field-help" id="account-hint"></p></div>
     <div class="field"><label for="item-date">Fecha de publicación</label><div class="date-inline"><input id="item-date" name="date" type="date"><button type="button" class="date-clear" data-action="clear-date">Sin fecha</button></div><p class="field-help">Sin fecha, se guarda en el banco de ideas.</p></div>
-    <div class="field"><label for="item-status">Estado</label><select id="item-status" name="status"></select><p class="field-help" id="status-hint">Elegí en qué etapa está tu contenido.</p></div>    <div class="field full"><label for="item-text">Texto de la publicación</label><textarea id="item-text" name="caption" maxlength="20000" placeholder="Escribí el texto, guion o notas de tu publicación..."></textarea></div>
+    <div class="field"><label for="item-status">Estado</label><select id="item-status" name="status"></select><p class="field-help" id="status-hint">Elegí en qué etapa está tu contenido.</p></div>    <div class="field full" id="item-text-field"><div class="field-label-row"><label for="item-text">Texto de la publicación</label><button type="button" class="text-expand-btn" id="item-text-expand" data-action="toggle-text-editor" aria-controls="item-text" aria-pressed="false" aria-label="Ampliar el editor de texto" title="Ampliar editor"></button></div><textarea id="item-text" name="caption" maxlength="20000" placeholder="Escribí el texto, guion o notas de tu publicación..."></textarea></div>
   </div></div><div class="modal-footer"><button type="button" class="btn btn-danger delete-action" id="modal-delete" data-action="delete-item" hidden>Eliminar</button><button type="button" class="btn btn-outline" data-action="close-modal">Cancelar</button><button type="submit" class="btn btn-primary" id="modal-submit">Guardar</button></div></form></div></div>
   <dialog id="manager-dialog" class="manager-dialog" aria-labelledby="manager-title"></dialog>
   <div id="calendar-tooltip" class="calendar-tooltip" role="tooltip" hidden></div>
@@ -1454,6 +1470,8 @@
       layers:'<rect x="3" y="4" width="18" height="5" rx="2"/><rect x="3" y="11" width="18" height="5" rx="2"/><path d="M5 19h14"/>',
       info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
       gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
+      expand:'<path d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"/>',
+      collapse:'<path d="M4 14h6v6M20 10h-6V4M14 10l6.5-6.5M10 14l-6.5 6.5"/>',
       menu:'<circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/>'
     };
     const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${PATHS[name]||PATHS.circle}</svg>`;
@@ -2014,8 +2032,21 @@
       renderNetworkPicker(defaultNetworks($('item-client').value,platforms.length?platforms:['instagram']));
     }
     function updateDateState(){ $('item-status').disabled=false;$('status-hint').textContent=$('item-date').value?'Elegí en qué etapa está tu contenido.':'Sin fecha se guarda en el banco, conservando su estado.'; }
+    // Expandable caption editor: same modal, other fields hidden meanwhile. It never saves by itself;
+    // values stay in the form until the usual Guardar button.
+    const textExpanded = () => document.querySelector('#modal-overlay .modal').classList.contains('is-text-expanded');
+    function setTextExpanded(expanded){
+      const button=$('item-text-expand');
+      document.querySelector('#modal-overlay .modal').classList.toggle('is-text-expanded',expanded);
+      button.innerHTML=icon(expanded?'collapse':'expand');
+      button.setAttribute('aria-pressed',String(expanded));
+      button.setAttribute('aria-label',expanded?'Reducir el editor de texto':'Ampliar el editor de texto');
+      button.title=expanded?'Reducir editor (Esc)':'Ampliar editor';
+      if(!expanded&&$('modal-overlay').classList.contains('open'))$('item-text-field').scrollIntoView({block:'nearest'});
+    }
     function openModal({id=null,date,idea=false}={}){
       hideCalendarTooltip();
+      setTextExpanded(false);
       const item=id?state.items.find(x=>x.id===id):null;
       if(id&&!item) return;
       state.editingId=item?.id||null; state.lastFocus=document.activeElement;state.lastFocusSelector=focusTarget(state.lastFocus);
@@ -2035,7 +2066,7 @@
       document.body.style.overflow='hidden';
       $('item-title').focus();
     }
-    function closeModal(){ $('modal-overlay').classList.remove('open');isolateApp(false); document.body.style.overflow=''; state.editingId=null; restoreFocus(state.lastFocus,state.lastFocusSelector); }
+    function closeModal(){ setTextExpanded(false); $('modal-overlay').classList.remove('open');isolateApp(false); document.body.style.overflow=''; state.editingId=null; restoreFocus(state.lastFocus,state.lastFocusSelector); }
     function submitForm(event){
       event.preventDefault();
       const title=$('item-title').value.trim();
@@ -2223,6 +2254,7 @@
       else if(a==='edit')openModal({id:btn.dataset.id});
       else if(a==='plan'){ const item=state.items.find(x=>x.id===btn.dataset.id); if(item){navigate('calendar');openModal({id:item.id,date:state.selectedDate});} }
       else if(a==='close-modal')closeModal();
+      else if(a==='toggle-text-editor')setTextExpanded(!textExpanded());
       else if(a==='clear-date'){$('item-date').value='';updateDateState();}
       else if(a==='delete-item')deleteItem();
       else if(a==='prev')changePeriod(-1);
@@ -2305,12 +2337,12 @@
     document.addEventListener('pointermove',onPointerMove,{passive:false});
     document.addEventListener('pointerup',onPointerUp);
     document.addEventListener('pointercancel',clearDrag);
-    document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeBackupMenu();if(drag)clearDrag();if($('modal-overlay').classList.contains('open'))closeModal();} });
-    $('modal-overlay').addEventListener('click',e=>{if(e.target===$('modal-overlay'))closeModal();});
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape'){closeBackupMenu();if(drag)clearDrag();if($('modal-overlay').classList.contains('open')){if(textExpanded())setTextExpanded(false);else closeModal();}} });
+    $('modal-overlay').addEventListener('click',e=>{if(e.target!==$('modal-overlay'))return;if(textExpanded())setTextExpanded(false);else closeModal();});
     $('item-form').addEventListener('submit',submitForm);
     $('item-date').addEventListener('change',updateDateState);
     $('import-file').addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';await importBackup(file);});
-    $('desktop-brand-icon').innerHTML=icon('logo');$('mobile-brand-icon').innerHTML=icon('logo');document.querySelectorAll('.commercial-help-icon,.mobile-help-icon').forEach(el=>el.innerHTML=icon('info'));$('download-icon').innerHTML=icon('download');$('upload-icon').innerHTML=icon('upload');$('modal-close-icon').innerHTML=icon('close');$('mobile-backup-icon').innerHTML=icon('download')+'<span>Exportar</span>';$('mobile-download').innerHTML=icon('download');$('mobile-upload').innerHTML=icon('upload');
+    $('desktop-brand-icon').innerHTML=icon('logo');$('mobile-brand-icon').innerHTML=icon('logo');document.querySelectorAll('.commercial-help-icon,.mobile-help-icon').forEach(el=>el.innerHTML=icon('info'));$('download-icon').innerHTML=icon('download');$('upload-icon').innerHTML=icon('upload');$('modal-close-icon').innerHTML=icon('close');$('item-text-expand').innerHTML=icon('expand');$('mobile-backup-icon').innerHTML=icon('download')+'<span>Exportar</span>';$('mobile-download').innerHTML=icon('download');$('mobile-upload').innerHTML=icon('upload');
     // UI accessibility only: focus stays in the modal, including when keyboard navigation wraps.
     document.addEventListener('keydown',e=>{
       if(e.key!=='Tab'||!$('modal-overlay').classList.contains('open'))return;
