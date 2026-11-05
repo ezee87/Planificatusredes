@@ -55,9 +55,10 @@ try{
  await evaluate(`localStorage.setItem('planifica-tus-redes-activated-v1','active');localStorage.setItem('planifica-tus-redes-tutorial-v1','done');localStorage.setItem('planifica-tus-redes-v2',JSON.stringify({clients:[{id:'client-a',name:'Cliente A',description:'',color:'#8da995'}],accounts:[{id:'a-ig',clientId:'client-a',platform:'instagram',username:'@cliente'},{id:'a-li',clientId:'client-a',platform:'linkedin',username:'empresa'}],items:[]}));location.reload()`);await wait(200);await ready();
  await check('Existing controls enhanced once, metadata templates untouched',allEnhanced+`&&[...document.querySelectorAll('div[hidden][aria-hidden=true] select')].every(s=>!s.classList.contains('dom-select-native'))`);
  await click('[data-action=new-post]');await fill('item-title','DOM select publication');
- await choose('item-type','carrusel');await choose('item-status','ready');await choose('item-client','client-a');await choose('item-account','a-li');
- await check('Dependent platform updated and hidden',`document.querySelector('#item-platform').value==='linkedin'&&document.querySelector('#item-platform').disabled&&document.querySelector('#item-platform-field').hidden&&document.querySelector('#item-platform-combobox').disabled`);
- await choose('item-account','');await choose('item-platform','tiktok');await choose('item-account','a-ig');
+ await choose('item-type','carrusel');await choose('item-status','ready');await choose('item-client','client-a');
+ // Account and network selects were replaced by the multi-network chips (qa-multirred-importacion.mjs covers them in depth).
+ await check('Client accounts shown as network chips',`[...document.querySelectorAll('#item-networks > .network-chips input')].map(i=>i.value).join()==='a:a-ig,a:a-li'&&document.querySelector('#item-networks input[value="a:a-ig"]').checked`);
+ await click('label.network-chip:has(input[value="a:a-li"])');await click('label.network-chip:has(input[value="a:a-li"])');
  await click('#modal-submit');
  const publication=await evaluate(`JSON.parse(localStorage.getItem('planifica-tus-redes-v2')).items.find(x=>x.title==='DOM select publication')`);
  if(!publication||publication.type!=='carrusel'||publication.status!=='ready'||publication.clientId!=='client-a'||publication.accountId!=='a-ig'||publication.platform!=='instagram')throw Error('Stored publication values changed');
@@ -68,7 +69,7 @@ try{
  await check('State update saved',`JSON.parse(localStorage.getItem('planifica-tus-redes-v2')).items.find(x=>x.id===${JSON.stringify(publication.id)}).status==='published'`);
  await choose('filter-client','client-a');await check('Filter rerender restores combobox focus',`document.activeElement.id==='filter-client-combobox'`);
  await choose('filter-platform','instagram');await choose('filter-client','all');await choose('filter-platform','all');
- await click('#desktop-nav [data-page=ideas]');await click('[data-action=new-idea]');await fill('item-title','DOM select idea');await choose('item-type','historia');await choose('item-platform','youtube');await choose('item-status','preparation');await click('#modal-submit');
+ await click('#desktop-nav [data-page=ideas]');await click('[data-action=new-idea]');await fill('item-title','DOM select idea');await choose('item-type','historia');await click('label.network-chip:has(input[value="p:youtube"])');await click('label.network-chip:has(input[value="p:instagram"])');await choose('item-status','preparation');await click('#modal-submit');
  await click('#desktop-nav [data-page=ideas]');
  const idea=await evaluate(`JSON.parse(localStorage.getItem('planifica-tus-redes-v2')).items.find(x=>x.title==='DOM select idea')`);
  if(!idea||idea.date!==null||idea.type!=='historia'||idea.platform!=='youtube'||idea.status!=='preparation')throw Error('Idea data mismatch');
@@ -78,7 +79,7 @@ try{
  // Every content-field dropdown, with real mouse hit testing, at both viewport sizes.
  for(const [width,height,mobile] of [[1440,900,false],[393,852,true],[320,568,true]]){
   await metrics(width,height,mobile);await click('[data-action=new-post]');
-  for(const id of ['item-client','item-account','item-platform','item-type','item-status']){
+  for(const id of ['item-client','item-type','item-status']){
    if(!await evaluate(`document.querySelector('#${id}-combobox').getClientRects().length>0`))continue;
    await click('#'+id+'-combobox');
    await check(id+' DOM panel visible without clipping at '+width,`(()=>{const p=document.querySelector('.dom-select-panel');if(!p||!p.matches(':popover-open'))return false;const r=p.getBoundingClientRect(),v=visualViewport;const x=r.x+r.width/2,y=r.y+Math.min(r.height/2,24);return r.left>=v.offsetLeft&&r.right<=v.offsetLeft+v.width+1&&r.top>=v.offsetTop&&r.bottom<=v.offsetTop+v.height+1&&p.contains(document.elementFromPoint(x,y))&&p.querySelectorAll('[role=option]').length===document.querySelector('#${id}').options.length;})()`);

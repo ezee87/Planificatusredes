@@ -92,7 +92,8 @@
     return s.clients.find(c => c.id !== api.PERSONAL)?.id || api.PERSONAL;
   };
   const sameText = (a, b) => a.trim().toLocaleLowerCase('es') === b.trim().toLocaleLowerCase('es');
-  const sameTarget = (item, target) => target.accountId ? item.accountId === target.accountId : (!item.accountId && item.platform === target.platform);
+  const networksOf = item => Array.isArray(item.networks) && item.networks.length ? item.networks : [{platform:item.platform, accountId:item.accountId || null}];
+  const sameTarget = (item, target) => networksOf(item).some(n => target.accountId ? n.accountId === target.accountId : (!n.accountId && n.platform === target.platform));
   const exists = (clientId, date, title, target) => state().items.some(x => x.clientId === clientId && (x.date || null) === (date || null) && sameText(x.title, title) && sameTarget(x, target));
   const targetName = target => { const account = state().accounts.find(a => a.id === target.accountId); return account ? api.accountLabel(account) : `${api.PLATFORM[target.platform]} (sin cuenta específica)`; };
   const typeOptions = selected => Object.entries(api.TYPES).map(([k, v]) => `<option value="${k}" ${k === selected ? 'selected' : ''}>${esc(v)}</option>`).join('');

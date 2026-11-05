@@ -92,7 +92,9 @@ try{
   }
   check('Exportación JSON generada',!!exportedName);
   const exported=JSON.parse(await readFile(join(downloads,exportedName),'utf8'));
-  check('Exportación conserva datos y relaciones',canonical({...exported,exportedAt:undefined})===canonical({...v2,exportedAt:undefined}));
+  // Multi-network migration: every legacy field is kept and each item also exports its single network.
+  const v2Migrated={...v2,items:v2.items.map(x=>({...x,networks:[{platform:x.platform,accountId:x.accountId}]}))};
+  check('Exportación conserva datos y relaciones',canonical({...exported,exportedAt:undefined})===canonical({...v2Migrated,exportedAt:undefined}));
 
   const exportedPath=join(fixtures,'respaldo-v2.json');await writeFile(exportedPath,JSON.stringify(exported));
   await evaluate(`localStorage.removeItem('planifica-tus-redes-v2')`);await reload();
@@ -101,7 +103,7 @@ try{
   await send('DOM.setFileInputFiles',{nodeId:input.nodeId,files:[exportedPath]});await wait(350);ws.removeEventListener('message',dialogHandler);
   check('Importación v2 solicita confirmación',dialogSeen);
   const restored=JSON.parse(await evaluate(`localStorage.getItem('planifica-tus-redes-v2')`));
-  check('Restauración v2 idéntica',canonical(restored)===canonical(v2));
+  check('Restauración v2 idéntica',canonical(restored)===canonical(v2Migrated));
 
   const v1={app:'Planifica tus Redes',version:1,items:[{id:'legacy-1',title:'Legado QA',caption:'v1',platform:'facebook',type:'post',status:'published',date:'2026-09-30',createdAt:'2026-09-01T00:00:00.000Z',updatedAt:'2026-09-02T00:00:00.000Z'}]};
   const v1Path=join(fixtures,'respaldo-v1.json');await writeFile(v1Path,JSON.stringify(v1));

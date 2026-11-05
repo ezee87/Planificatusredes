@@ -1337,6 +1337,39 @@
     .entry-note { font-size:14px; margin-bottom:12px!important; }
     @media(max-width:520px) { .entry-screen { padding:8px 12px; } .entry-card { --entry-pad:20px; } .entry-brand { padding-bottom:16px; } .entry-choices { grid-template-columns:1fr; } .entry-actions .btn { flex:1; min-width:0; padding-inline:8px; white-space:normal; } .entry-actions .btn-primary { margin-left:0; } }
     @media(prefers-reduced-motion:reduce) { .entry-card { animation:none; } }
+    /* Publicaciones multirred: casillas con forma de chip dentro del formulario. */
+    #item-form .field-label { font-size:13px; font-weight:650; color:#405d47; }
+    .network-chips { display:flex; flex-wrap:wrap; gap:6px; }
+    .network-chip { display:inline-flex; align-items:center; gap:6px; max-width:100%; min-height:36px; padding:5px 11px 5px 8px; border:1px solid var(--control-border,#dbe4da); border-radius:999px; background:#fff; color:#2f4636; font-size:14px; font-weight:600; cursor:pointer; }
+    .network-chip svg { width:16px; height:16px; }
+    .network-chip span { overflow-wrap:anywhere; }
+    #item-form .network-chip input { flex:none; width:16px; height:16px; min-height:0; margin:0; padding:0; border:0; box-shadow:none; accent-color:var(--primary); }
+    .network-chip:has(input:checked) { border-color:var(--primary); background:var(--primary-wash); color:var(--primary-dark); box-shadow:inset 0 0 0 1px var(--primary); }
+    .network-chip:has(input:focus-visible) { outline:2px solid #548964; outline-offset:2px; }
+    .network-extra { margin-top:6px; }
+    .network-extra summary { width:max-content; max-width:100%; padding:4px 0; color:var(--text-secondary); font-size:13px; font-weight:600; cursor:pointer; }
+    .network-extra .network-chips { margin-top:6px; }
+    .platform-icon { position:relative; }
+    .platform-more { position:absolute; right:-6px; bottom:-6px; min-width:19px; height:19px; padding:0 4px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--primary-dark); font-size:11px; font-weight:800; line-height:17px; text-align:center; }
+    .post-meta span.post-networks { white-space:normal; }
+    /* Diálogo de importación: restauración completa o sólo publicaciones. */
+    .import-modes { display:grid; gap:8px; min-width:0; margin:0; padding:0; border:0; }
+    .import-modes legend { margin-bottom:8px; padding:0; color:#405d47; font-weight:700; }
+    .import-mode { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:#fff; cursor:pointer; }
+    .import-mode:has(input:checked) { border-color:var(--primary); background:var(--primary-wash); box-shadow:inset 0 0 0 1px var(--primary); }
+    .import-mode input { flex:none; width:18px; height:18px; margin:2px 0 0; accent-color:var(--primary); }
+    .import-mode strong { display:block; color:var(--ink); }
+    .import-mode small { display:block; color:var(--text-secondary); font-size:13px; line-height:1.35; }
+    .import-warning { margin:0; padding:9px 12px; border-radius:10px; background:#fbefe9; color:#7d3727; font-size:14px; line-height:1.4; }
+    .import-summary { display:grid; grid-template-columns:1fr auto; gap:4px 12px; margin:0; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--paper-soft); font-size:14px; }
+    .import-summary dt { color:var(--text-secondary); }
+    .import-summary dd { margin:0; color:var(--ink); font-weight:700; text-align:right; overflow-wrap:anywhere; }
+    .import-status { margin:8px 0 0; font-size:14px; line-height:1.4; }
+    .import-status.is-error { color:#aa4843; }
+    .import-duplicates { margin-top:8px; color:var(--text-secondary); font-size:13px; }
+    .import-duplicates summary { cursor:pointer; font-weight:600; }
+    .import-duplicates ul { max-height:140px; margin:6px 0 0; padding-left:18px; overflow:auto; overflow-wrap:anywhere; }
+    .import-errors { max-height:180px; margin:6px 0 0; padding-left:18px; overflow:auto; color:#9c3f3a; font-size:13px; line-height:1.4; overflow-wrap:anywhere; }
   </style>
 </head>
 <body>
@@ -1368,9 +1401,8 @@
   <div id="modal-overlay" class="modal-overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description"><div class="modal-header"><div><h2 id="modal-title"></h2><p id="modal-description"></p></div><button type="button" class="icon-btn" data-action="close-modal" aria-label="Cerrar ventana" id="modal-close-icon"></button></div><form id="item-form" novalidate><div class="modal-body"><div class="form-grid">
     <div class="field full"><label for="item-title">Título o tema *</label><input id="item-title" name="title" type="text" maxlength="120" placeholder="Ej.: 5 consejos para empezar" autocomplete="off" required></div>
     <div class="field"><label for="item-client">Cliente</label><select id="item-client"></select></div>
-    <div class="field"><label for="item-account">Cuenta social</label><select id="item-account"></select><p class="field-help" id="account-hint"></p></div>
-    <div class="field" id="item-platform-field"><label for="item-platform">Red social</label><select id="item-platform" name="platform"></select></div>
     <div class="field"><label for="item-type">Tipo de contenido</label><select id="item-type" name="type"></select></div>
+    <div class="field full" id="item-networks-field"><span class="field-label" id="item-networks-label">Redes sociales *</span><div id="item-networks" role="group" aria-labelledby="item-networks-label" aria-describedby="account-hint"></div><p class="field-help" id="account-hint"></p></div>
     <div class="field"><label for="item-date">Fecha de publicación</label><div class="date-inline"><input id="item-date" name="date" type="date"><button type="button" class="date-clear" data-action="clear-date">Sin fecha</button></div><p class="field-help">Sin fecha, se guarda en el banco de ideas.</p></div>
     <div class="field"><label for="item-status">Estado</label><select id="item-status" name="status"></select><p class="field-help" id="status-hint">Elegí en qué etapa está tu contenido.</p></div>    <div class="field full"><label for="item-text">Texto de la publicación</label><textarea id="item-text" name="caption" maxlength="20000" placeholder="Escribí el texto, guion o notas de tu publicación..."></textarea></div>
   </div></div><div class="modal-footer"><button type="button" class="btn btn-danger delete-action" id="modal-delete" data-action="delete-item" hidden>Eliminar</button><button type="button" class="btn btn-outline" data-action="close-modal">Cancelar</button><button type="submit" class="btn btn-primary" id="modal-submit">Guardar</button></div></form></div></div>
@@ -1440,11 +1472,31 @@
     const ddmm = key => new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'short'}).format(parseDate(key));
     const validDate = key => { if (typeof key!=='string' || !/^\d{4}-\d{2}-\d{2}$/.test(key)) return false; const [y,m,d]=key.split('-').map(Number); const v = new Date(y,m-1,d); return v.getFullYear()===y && v.getMonth()===m-1 && v.getDate()===d; };
     const uid = () => typeof crypto!=='undefined' && crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    // A content item keeps one identity and may target several networks: each one is a platform,
+    // optionally tied to an account of the item's client. platform/accountId mirror the first
+    // network so single-network readers (Mis bonos, older backups) keep working unchanged.
+    const MAX_NETWORKS = 20;
+    const PLATFORM_ORDER = Object.keys(PLATFORM);
+    function tidyNetworks(list){
+      const covered=new Set(list.filter(n=>n.accountId).map(n=>n.platform)),seen=new Set();
+      return list.filter(n=>{const key=n.accountId?'a:'+n.accountId:'p:'+n.platform;if((!n.accountId&&covered.has(n.platform))||seen.has(key))return false;seen.add(key);return true;})
+        .map(n=>({platform:n.platform,accountId:n.accountId||null}))
+        .sort((a,b)=>PLATFORM_ORDER.indexOf(a.platform)-PLATFORM_ORDER.indexOf(b.platform)||(a.accountId?0:1)-(b.accountId?0:1));
+    }
+    const networksOf = x => Array.isArray(x?.networks)&&x.networks.length ? x.networks : [{platform:x.platform,accountId:x.accountId||null}];
+    const platformsOf = x => [...new Set(networksOf(x).map(n=>n.platform))];
+    const withNetworks = (x, list) => { const networks=tidyNetworks(list); return {...x,networks,platform:networks[0].platform,accountId:networks[0].accountId}; };
     const cleanItem = (x) => {
       if (!x || typeof x!=='object' || Array.isArray(x) || typeof x.title!=='string' || !x.title.trim()) return null;
       if (x.date !== null && x.date !== undefined && x.date!=='' && !validDate(x.date)) return null;
+      if (x.importId!==undefined && (typeof x.importId!=='string' || !x.importId || x.importId.length>=180)) return null;
+      let networks;
+      if (x.networks!==undefined) {
+        if (!Array.isArray(x.networks) || !x.networks.length || x.networks.length>MAX_NETWORKS || x.networks.some(n=>!n || typeof n!=='object' || Array.isArray(n) || !Object.hasOwn(PLATFORM,n.platform) || (n.accountId!==null && n.accountId!==undefined && (typeof n.accountId!=='string' || !n.accountId || n.accountId.length>=180)))) return null;
+        networks = x.networks;
+      } else networks = [{platform:Object.hasOwn(PLATFORM,x.platform)?x.platform:'instagram',accountId:x.accountId}];
       const date = x.date || null;
-      return { id:typeof x.id==='string' && x.id.length < 180 && x.id ? x.id : uid(), title:x.title, caption:typeof x.caption==='string' ? x.caption : '', platform:Object.hasOwn(PLATFORM,x.platform)?x.platform:'instagram', type:Object.hasOwn(TYPES,x.type)?x.type:'post', status:Object.hasOwn(STATUS,x.status)?x.status:'idea', date, clientId:x.clientId, accountId:x.accountId, createdAt:typeof x.createdAt==='string'?x.createdAt:new Date().toISOString(), updatedAt:typeof x.updatedAt==='string'?x.updatedAt:new Date().toISOString() };
+      return withNetworks({ id:typeof x.id==='string' && x.id.length < 180 && x.id ? x.id : uid(), title:x.title, caption:typeof x.caption==='string' ? x.caption : '', type:Object.hasOwn(TYPES,x.type)?x.type:'post', status:Object.hasOwn(STATUS,x.status)?x.status:'idea', date, clientId:x.clientId, ...(x.importId===undefined?{}:{importId:x.importId}), createdAt:typeof x.createdAt==='string'?x.createdAt:new Date().toISOString(), updatedAt:typeof x.updatedAt==='string'?x.updatedAt:new Date().toISOString() }, networks);
     };
     const DATA_KEY = 'planifica-tus-redes-v2';
     const PERSONAL = 'personal';
@@ -1473,15 +1525,17 @@
       accounts=accounts.map(a=>({id:a.id,clientId:a.clientId,platform:a.platform,username:a.username,...(a.name===undefined?{}:{name:a.name})}));
       const accountsById=new Map(accounts.map(a=>[a.id,a]));
       if(data.items.some(x=>!x||typeof x.caption!=='string'||!Object.hasOwn(x,'date')||!Object.hasOwn(PLATFORM,x.platform)||!Object.hasOwn(TYPES,x.type)||!Object.hasOwn(STATUS,x.status))) throw Error('Datos de contenido incompletos');
-      if(data.items.some(x=>(x.clientId!==undefined&&typeof x.clientId!=='string')||(x.accountId!==undefined&&x.accountId!==null&&typeof x.accountId!=='string')||['createdAt','updatedAt'].some(k=>x[k]!==undefined&&typeof x[k]!=='string')))throw Error('Tipos de contenido no válidos');
+      if(data.items.some(x=>(x.clientId!==undefined&&typeof x.clientId!=='string')||(x.accountId!==undefined&&x.accountId!==null&&typeof x.accountId!=='string')||(x.importId!==undefined&&typeof x.importId!=='string')||(x.networks!==undefined&&!Array.isArray(x.networks))||['createdAt','updatedAt'].some(k=>x[k]!==undefined&&typeof x[k]!=='string')))throw Error('Tipos de contenido no válidos');
       const items=data.items.map(cleanItem);
       if(items.some(x=>!x)||!uniqueIds(data.items)) throw Error('Contenido no válido o identificadores duplicados');
-      items.forEach(x=>{
+      items.forEach((x,index)=>{
+        // Same rule as before, per network: an account must belong to the item's client, otherwise
+        // the content moves to Personal and keeps only its platforms. Accounts dictate their platform.
         const client=clientsById.get(x.clientId);
-        const candidate=accountsById.get(x.accountId);
-        const account=candidate?.clientId===x.clientId?candidate:null;
-        if(legacy||!client||(x.accountId&&!account)){x.clientId=PERSONAL;x.accountId=null;}
-        else {x.accountId=account?.id||null;if(account)x.platform=account.platform;}
+        const valid=x.networks.every(n=>!n.accountId||accountsById.get(n.accountId)?.clientId===x.clientId);
+        const networks=legacy||!client||!valid?x.networks.map(n=>({platform:n.platform,accountId:null})):x.networks.map(n=>n.accountId?{platform:accountsById.get(n.accountId).platform,accountId:n.accountId}:n);
+        if(legacy||!client||!valid)x.clientId=PERSONAL;
+        items[index]=withNetworks(x,networks);
       });
       if(data.preferences!==undefined&&!isRecord(data.preferences))throw Error('Preferencias no válidas');
       const preferences=data.preferences||{};
@@ -1540,9 +1594,12 @@
       const before={items:state.items,clients:state.clients,accounts:state.accounts,clientFilter:state.clientFilter,platformFilter:state.platformFilter,mode:state.mode};
       change();if(!save()){Object.assign(state,before);render();return false;}render();return true;
     }
-    const matches = x => (state.clientFilter==='all'||x.clientId===state.clientFilter)&&(state.platformFilter==='all'||x.platform===state.platformFilter);
+    // Filtering never duplicates: each item is tested once against all of its networks.
+    const matches = x => (state.clientFilter==='all'||x.clientId===state.clientFilter)&&(state.platformFilter==='all'||platformsOf(x).includes(state.platformFilter));
     const clientOf = x => state.clients.find(c=>c.id===x.clientId)||personal();
-    const accountOf = x => state.accounts.find(a=>a.id===x.accountId);
+    const networkAccount = n => n.accountId?state.accounts.find(a=>a.id===n.accountId):null;
+    const accountsOf = x => networksOf(x).map(networkAccount).filter(Boolean);
+    const platformNames = x => platformsOf(x).map(p=>PLATFORM[p]).join(', ');
     const PLATFORM_PATHS = {
       instagram:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/>',
       tiktok:'<path d="M14 3v12a4 4 0 1 1-4-4M14 3c1 4 3 5 6 5"/>',
@@ -1565,8 +1622,11 @@
       return `${PLATFORM[account.platform]} · ${identifier} · ${account.username}`;
     }
     const accountLabel = a => `${PLATFORM[a.platform]} — ${a.username}${a.name?' · '+a.name:''}`;
-    const identity = x => `${clientOf(x).name} · ${accountOf(x)?accountLabel(accountOf(x)):PLATFORM[x.platform]}`;
-    const clientBadge = x => `<div class="client-badge" title="${escapeHTML(identity(x))}"><i style="background:${clientOf(x).color}"></i><span>${escapeHTML(clientOf(x).name)}${accountOf(x)?' · '+escapeHTML(accountOf(x).username):''}</span></div>`;
+    const networkLabels = (x,label=accountLabel) => networksOf(x).map(n=>{const a=networkAccount(n);return a?label(a):PLATFORM[n.platform];});
+    const identity = x => `${clientOf(x).name} · ${networkLabels(x).join(', ')}`;
+    const clientBadge = x => { const users=accountsOf(x).map(a=>a.username); return `<div class="client-badge" title="${escapeHTML(identity(x))}"><i style="background:${clientOf(x).color}"></i><span>${escapeHTML(clientOf(x).name)}${users.length?' · '+escapeHTML(users.join(', ')):''}</span></div>`; };
+    const networksMeta = x => `<span class="post-networks">${escapeHTML(platformNames(x))}</span>`;
+    const platformBadge = x => { const list=platformsOf(x); return `<div class="platform-icon ${list[0]}" title="${escapeHTML(platformNames(x))}">${escapeHTML((PLATFORM[list[0]]||'R').slice(0,2))}${list.length>1?`<span class="platform-more" aria-hidden="true">+${list.length-1}</span>`:''}</div>`; };
     const clientOptions = selected => state.clients.map(c=>`<option value="${escapeHTML(c.id)}" ${c.id===selected?'selected':''}>${escapeHTML(c.name)}</option>`).join('');
     const platformOptions = selected => Object.entries(PLATFORM).map(([id,name])=>`<option value="${id}" ${id===selected?'selected':''}>${name}</option>`).join('');
     let progressStatusFilter='all';
@@ -1627,7 +1687,7 @@
       requestAnimationFrame(updateMobileReturn);
     }
     const modalStatus = status => `<span class="status-pill ${status==='idea'?'':status}">${escapeHTML(STATUS[status])}</span>`;
-    function postCard(item,options={}) { return `<article class="post-card"><div class="platform-icon ${item.platform}">${escapeHTML((PLATFORM[item.platform]||'R').slice(0,2))}</div><div class="post-info"><h4 class="post-title">${escapeHTML(item.title)}</h4>${clientBadge(item)}<div class="post-meta"><span>${escapeHTML(PLATFORM[item.platform])}</span><span>${escapeHTML(TYPES[item.type])}</span></div></div>${modalStatus(item.status)}<div class="post-actions">${options.mobileWeek?`<button type="button" class="subtle-icon" data-action="mobile-move" data-id="${escapeHTML(item.id)}" title="Mover a otro día" aria-label="Mover fecha de ${escapeHTML(item.title)}">${icon('calendar')}</button>`:`<button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(item.id)}" title="Arrastrar a otra fecha" aria-label="Mover ${escapeHTML(item.title)} arrastrando">${icon('grip')}</button>`}<button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(item.id)}" title="Editar" aria-label="Editar ${escapeHTML(item.title)}">${icon('edit')}</button></div></article>`; }
+    function postCard(item,options={}) { return `<article class="post-card">${platformBadge(item)}<div class="post-info"><h4 class="post-title">${escapeHTML(item.title)}</h4>${clientBadge(item)}<div class="post-meta">${networksMeta(item)}<span>${escapeHTML(TYPES[item.type])}</span></div></div>${modalStatus(item.status)}<div class="post-actions">${options.mobileWeek?`<button type="button" class="subtle-icon" data-action="mobile-move" data-id="${escapeHTML(item.id)}" title="Mover a otro día" aria-label="Mover fecha de ${escapeHTML(item.title)}">${icon('calendar')}</button>`:`<button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(item.id)}" title="Arrastrar a otra fecha" aria-label="Mover ${escapeHTML(item.title)} arrastrando">${icon('grip')}</button>`}<button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(item.id)}" title="Editar" aria-label="Editar ${escapeHTML(item.title)}">${icon('edit')}</button></div></article>`; }
     const planningDate = () => validDate(state.selectedDate)?state.selectedDate:today();
     const planningDateLabel = key => new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'long',...(parseDate(key).getFullYear()!==new Date().getFullYear()?{year:'numeric'}:{})}).format(parseDate(key));
     const mobilePlanningDateLabel = key => titleCaseFirst(new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(parseDate(key)));
@@ -1707,7 +1767,7 @@
       if(event.target.closest('.mobile-planning-datebar')&&event.relatedTarget&&!event.relatedTarget.closest('.mobile-planning-datebar'))closePlanningPicker();
     });
     function mobileIdeaCard(item,date){
-      return `<article class="idea-card mobile-planning-idea" data-idea-id="${escapeHTML(item.id)}"><div class="mobile-idea-heading"><div><h3>${escapeHTML(item.title)}</h3>${clientBadge(item)}<div class="post-meta"><span>${escapeHTML(PLATFORM[item.platform])}</span><span>${escapeHTML(TYPES[item.type])}</span></div></div><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(item.id)}" aria-label="Editar ${escapeHTML(item.title)}">${icon('edit')}</button></div>${modalStatus(item.status)}<button type="button" class="btn btn-muted mobile-plan-button" data-action="mobile-plan" data-id="${escapeHTML(item.id)}">${icon('calendar')}<span>Planificar para el ${escapeHTML(planningDateLabel(date))}</span></button></article>`;
+      return `<article class="idea-card mobile-planning-idea" data-idea-id="${escapeHTML(item.id)}"><div class="mobile-idea-heading"><div><h3>${escapeHTML(item.title)}</h3>${clientBadge(item)}<div class="post-meta">${networksMeta(item)}<span>${escapeHTML(TYPES[item.type])}</span></div></div><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(item.id)}" aria-label="Editar ${escapeHTML(item.title)}">${icon('edit')}</button></div>${modalStatus(item.status)}<button type="button" class="btn btn-muted mobile-plan-button" data-action="mobile-plan" data-id="${escapeHTML(item.id)}">${icon('calendar')}<span>Planificar para el ${escapeHTML(planningDateLabel(date))}</span></button></article>`;
     }
     function renderMobileWorkPanel(){
       const date=planningDate(),list=ideas(),filtered=state.clientFilter!=='all'||state.platformFilter!=='all';
@@ -1803,7 +1863,7 @@
       const days=Array.from({length:7},(_,i)=>{
         const key=shiftDays(start,i); const arr=itemsFor(key);
         const weekday=new Intl.DateTimeFormat('es-ES',{weekday:'long'}).format(parseDate(key));
-        return `<div class="week-day ${arr.length?'has-posts':'is-empty'} ${key===today()?'is-today':''} ${key===state.selectedDate?'is-selected':''}" data-drop-date="${key}" data-action="select-date" data-date="${key}" role="group" aria-label="${escapeHTML(longDate(key))}"><div class="week-day-head"><span class="weekday">${escapeHTML(weekday)}</span><button type="button" class="date-circle" aria-pressed="${key===state.selectedDate}" data-action="select-date" data-date="${key}" aria-label="Seleccionar ${escapeHTML(longDate(key))}">${parseDate(key).getDate()}</button><button type="button" class="week-add week-head-add" data-action="add-date" data-date="${key}" title="Agregar publicación al ${escapeHTML(longDate(key))}" aria-label="Agregar publicación al ${escapeHTML(longDate(key))}">${icon('plus')}</button></div>${arr.map((x,index)=>`<article class="week-event ${index>=2?'week-event-extra':''}"><button type="button" class="week-event-title" data-action="edit" data-id="${escapeHTML(x.id)}" data-tooltip-id="${escapeHTML(x.id)}">${escapeHTML(x.title)}</button>${weekClientBadge(x)}<div class="week-event-meta">${modalStatus(x.status)}<button type="button" class="tiny-grip drag-handle" data-drag-id="${escapeHTML(x.id)}" aria-label="Mover ${escapeHTML(x.title)} arrastrando" title="Mover publicación">${icon('grip')}</button><span class="week-event-label">${escapeHTML(PLATFORM[x.platform])}</span></div></article>`).join('')}${arr.length>2?`<button type="button" class="day-more week-more" data-action="select-date" data-date="${key}" aria-label="Ver ${arr.length-2} publicaciones más del ${escapeHTML(longDate(key))}">+${arr.length-2} más</button>`:''}<button type="button" class="week-add" data-action="add-date" data-date="${key}">${icon('plus')} Agregar</button></div>`;
+        return `<div class="week-day ${arr.length?'has-posts':'is-empty'} ${key===today()?'is-today':''} ${key===state.selectedDate?'is-selected':''}" data-drop-date="${key}" data-action="select-date" data-date="${key}" role="group" aria-label="${escapeHTML(longDate(key))}"><div class="week-day-head"><span class="weekday">${escapeHTML(weekday)}</span><button type="button" class="date-circle" aria-pressed="${key===state.selectedDate}" data-action="select-date" data-date="${key}" aria-label="Seleccionar ${escapeHTML(longDate(key))}">${parseDate(key).getDate()}</button><button type="button" class="week-add week-head-add" data-action="add-date" data-date="${key}" title="Agregar publicación al ${escapeHTML(longDate(key))}" aria-label="Agregar publicación al ${escapeHTML(longDate(key))}">${icon('plus')}</button></div>${arr.map((x,index)=>`<article class="week-event ${index>=2?'week-event-extra':''}"><button type="button" class="week-event-title" data-action="edit" data-id="${escapeHTML(x.id)}" data-tooltip-id="${escapeHTML(x.id)}">${escapeHTML(x.title)}</button>${weekClientBadge(x)}<div class="week-event-meta">${modalStatus(x.status)}<button type="button" class="tiny-grip drag-handle" data-drag-id="${escapeHTML(x.id)}" aria-label="Mover ${escapeHTML(x.title)} arrastrando" title="Mover publicación">${icon('grip')}</button><span class="week-event-label">${escapeHTML(platformNames(x))}</span></div></article>`).join('')}${arr.length>2?`<button type="button" class="day-more week-more" data-action="select-date" data-date="${key}" aria-label="Ver ${arr.length-2} publicaciones más del ${escapeHTML(longDate(key))}">+${arr.length-2} más</button>`:''}<button type="button" class="week-add" data-action="add-date" data-date="${key}">${icon('plus')} Agregar</button></div>`;
       });
       const mobileDays=Array.from({length:7},(_,i)=>{const key=shiftDays(start,i);const arr=itemsFor(key);const initials=['L','M','X','J','V','S','D'];return `<button type="button" class="mobile-week-date ${key===state.selectedDate?'is-selected':''} ${key===today()?'is-today':''}" data-action="select-date" data-date="${key}" data-drop-date="${key}" data-post-count="${arr.length}" aria-label="${escapeHTML(longDate(key))}, ${arr.length} ${arr.length===1?'publicación':'publicaciones'}" aria-pressed="${key===state.selectedDate}"><span>${initials[i]}</span><strong>${parseDate(key).getDate()}</strong>${mobileWeekIndicators(arr)}</button>`;}).join('');
       const selectedInWeek=state.selectedDate>=start && state.selectedDate<=shiftDays(start,6)?state.selectedDate:start;
@@ -1820,7 +1880,7 @@
     }
     function ideaCard(x) {
       const caption=x.caption.trim();
-      return `<article class="idea-card"><div class="idea-card-top"><span class="idea-label">${escapeHTML(PLATFORM[x.platform])} · ${escapeHTML(TYPES[x.type])}</span><button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(x.id)}" aria-label="Arrastrar idea al calendario" title="Arrastrar idea al calendario">${icon('grip')}</button></div><h3>${escapeHTML(x.title)}</h3>${clientBadge(x)}<p>${caption?escapeHTML(caption):'Idea sin texto todavía'}</p><div class="idea-card-bottom"><button type="button" class="text-btn" data-action="plan" data-id="${escapeHTML(x.id)}">Planificar ${icon('arrow')}</button><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" title="Editar idea" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></div></article>`;
+      return `<article class="idea-card"><div class="idea-card-top"><span class="idea-label">${escapeHTML(platformNames(x))} · ${escapeHTML(TYPES[x.type])}</span><button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(x.id)}" aria-label="Arrastrar idea al calendario" title="Arrastrar idea al calendario">${icon('grip')}</button></div><h3>${escapeHTML(x.title)}</h3>${clientBadge(x)}<p>${caption?escapeHTML(caption):'Idea sin texto todavía'}</p><div class="idea-card-bottom"><button type="button" class="text-btn" data-action="plan" data-id="${escapeHTML(x.id)}">Planificar ${icon('arrow')}</button><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" title="Editar idea" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></div></article>`;
     }
     function renderIdeas() {
       const list=ideas();
@@ -1830,7 +1890,7 @@
       const c=counts(); const pct=c.total?Math.round(c.published/c.total*100):0;
       const upcoming=posts().filter(x=>progressStatusFilter==='all'||(progressStatusFilter==='planned'?(x.status==='idea'||x.status==='preparation'||x.status==='ready'):progressStatusFilter==='pending'?(x.status==='idea'||x.status==='preparation'):x.status===progressStatusFilter)).sort((a,b)=>a.date.localeCompare(b.date));
       const ratios = [['published',c.published],['ready',c.ready],['preparation',c.preparation],['idea',c.idea]];
-      return `<div class="progress-layout"><section class="surface progress-panel"><h2>Avance de tu contenido</h2><p class="panel-desc">Distribución y progreso de todas tus publicaciones con fecha, incluidas las realizadas.</p><div class="progress-number"><strong>${pct}%</strong><span>de publicaciones realizadas</span></div><div class="progress-bar" role="progressbar" aria-label="Publicaciones realizadas" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">${c.total?ratios.map(([s,n])=>`<span class="part-${s}" style="width:${n*100/c.total}%"></span>`).join(''):''}</div><div class="legend">${[['idea','Ideas por preparar',c.idea],['preparation','En preparación',c.preparation],['ready','Listas para publicar',c.ready],['published','Publicadas',c.published]].map(([s,t,n])=>`<div class="legend-row"><span class="legend-dot ${s}"></span><span>${t}</span><strong>${n}</strong></div>`).join('')}</div><p class="mini-hint">Las ${ideas().length} ${ideas().length===1?'idea sin fecha está':'ideas sin fecha están'} en el banco, fuera de este cálculo.</p></section><section class="surface progress-panel"><h2>Publicaciones</h2><p class="panel-desc">Contenido con fecha de publicación asignada.</p>${upcoming.length?`<div class="next-list">${upcoming.map(x=>`<article class="next-item"><div class="date-badge"><strong>${parseDate(x.date).getDate()}</strong><span>${escapeHTML(monShort(x.date))}</span></div><div class="post-info"><h3 class="post-title">${escapeHTML(x.title)}</h3>${clientBadge(x)}<div class="post-meta"><span>${escapeHTML(PLATFORM[x.platform])}</span><span>${escapeHTML(STATUS[x.status])}</span></div></div><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></article>`).join('')}</div>`:`<div class="empty-small"><span class="empty-illustration">${icon('calendar')}</span><p>No hay publicaciones que coincidan con los filtros seleccionados.</p><button type="button" class="btn btn-muted" data-action="nav" data-page="calendar">Ir al calendario ${icon('arrow')}</button></div>`}</section></div>`;
+      return `<div class="progress-layout"><section class="surface progress-panel"><h2>Avance de tu contenido</h2><p class="panel-desc">Distribución y progreso de todas tus publicaciones con fecha, incluidas las realizadas.</p><div class="progress-number"><strong>${pct}%</strong><span>de publicaciones realizadas</span></div><div class="progress-bar" role="progressbar" aria-label="Publicaciones realizadas" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">${c.total?ratios.map(([s,n])=>`<span class="part-${s}" style="width:${n*100/c.total}%"></span>`).join(''):''}</div><div class="legend">${[['idea','Ideas por preparar',c.idea],['preparation','En preparación',c.preparation],['ready','Listas para publicar',c.ready],['published','Publicadas',c.published]].map(([s,t,n])=>`<div class="legend-row"><span class="legend-dot ${s}"></span><span>${t}</span><strong>${n}</strong></div>`).join('')}</div><p class="mini-hint">Las ${ideas().length} ${ideas().length===1?'idea sin fecha está':'ideas sin fecha están'} en el banco, fuera de este cálculo.</p></section><section class="surface progress-panel"><h2>Publicaciones</h2><p class="panel-desc">Contenido con fecha de publicación asignada.</p>${upcoming.length?`<div class="next-list">${upcoming.map(x=>`<article class="next-item"><div class="date-badge"><strong>${parseDate(x.date).getDate()}</strong><span>${escapeHTML(monShort(x.date))}</span></div><div class="post-info"><h3 class="post-title">${escapeHTML(x.title)}</h3>${clientBadge(x)}<div class="post-meta">${networksMeta(x)}<span>${escapeHTML(STATUS[x.status])}</span></div></div><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></article>`).join('')}</div>`:`<div class="empty-small"><span class="empty-illustration">${icon('calendar')}</span><p>No hay publicaciones que coincidan con los filtros seleccionados.</p><button type="button" class="btn btn-muted" data-action="nav" data-page="calendar">Ir al calendario ${icon('arrow')}</button></div>`}</section></div>`;
     }
 
     function arrangeClientColumns(){
@@ -1882,17 +1942,18 @@
         const updated={...a,id:a?.id||uid(),clientId,platform:data.get('platform'),username,name:data.get('name').trim()};
         return commit(()=>{
           state.accounts=a?state.accounts.map(x=>x.id===id?updated:x):[...state.accounts,updated];
-          if(a)state.items=state.items.map(x=>x.accountId===id?{...x,platform:updated.platform}:x);
+          if(a)state.items=state.items.map(x=>networksOf(x).some(n=>n.accountId===id)?withNetworks(x,networksOf(x).map(n=>n.accountId===id?{...n,platform:updated.platform}:n)):x);
         });
       });
     }
     function deleteAccount(id){
       const account=state.accounts.find(a=>a.id===id);if(!account)return;
-      const affected=state.items.filter(x=>x.accountId===id);
+      const uses=x=>networksOf(x).some(n=>n.accountId===id);
+      const affected=state.items.filter(uses);
       const others=state.accounts.filter(a=>a.clientId===account.clientId&&a.id!==id);
       manager('Eliminar cuenta',`<p>¿Eliminar ${escapeHTML(accountLabel(account))}? ${affected.length} contenidos quedarían afectados (${affected.filter(x=>!!x.date).length} publicaciones y ${affected.filter(x=>!x.date).length} ideas). No se eliminará contenido.</p>${affected.length?`<div class="field"><label for="account-transfer">Destino del contenido</label><select id="account-transfer" name="target"><option value="">Conservar en el cliente sin cuenta específica</option>${others.map(a=>`<option value="${escapeHTML(a.id)}">Reasignar a ${escapeHTML(accountLabel(a))}</option>`).join('')}</select><p class="field-help">Al reasignar se usará la plataforma de la cuenta elegida.</p></div>`:''}`,data=>{
         const target=others.find(a=>a.id===data.get('target'));
-        return commit(()=>{state.items=state.items.map(x=>x.accountId===id?{...x,accountId:target?.id||null,platform:target?.platform||x.platform}:x);state.accounts=state.accounts.filter(a=>a.id!==id);});
+        return commit(()=>{state.items=state.items.map(x=>uses(x)?withNetworks(x,networksOf(x).map(n=>n.accountId===id?{platform:target?.platform||n.platform,accountId:target?.id||null}:n)):x);state.accounts=state.accounts.filter(a=>a.id!==id);});
       },'Eliminar cuenta',true);
     }
     function deleteClient(id){
@@ -1903,7 +1964,7 @@
         const destroy=data.get('operation')==='delete';
         if(destroy&&!window.confirm(`Confirmación definitiva: se eliminarán “${c.name}” y sus ${content.length} contenidos. Esta acción no se puede deshacer. ¿Eliminar todo?`))return false;
         return commit(()=>{
-          state.items=destroy?state.items.filter(x=>x.clientId!==id):state.items.map(x=>x.clientId===id?{...x,clientId:PERSONAL,accountId:null}:x);
+          state.items=destroy?state.items.filter(x=>x.clientId!==id):state.items.map(x=>x.clientId===id?withNetworks({...x,clientId:PERSONAL},networksOf(x).map(n=>({platform:n.platform,accountId:null}))):x);
           state.accounts=state.accounts.filter(a=>a.clientId!==id);state.clients=state.clients.filter(c=>c.id!==id);
           if(state.clientFilter===id)state.clientFilter='all';
         });
@@ -1924,17 +1985,33 @@
       else if(action==='account-new')editAccount(null,id);else if(action==='account-edit')editAccount(id);else if(action==='account-delete')deleteAccount(id);
     }
 
-    function formSelectValues(){ $('item-platform').innerHTML=Object.entries(PLATFORM).map(([k,t])=>`<option value="${k}">${t}</option>`).join(''); $('item-type').innerHTML=Object.entries(TYPES).map(([k,t])=>`<option value="${k}">${t}</option>`).join(''); $('item-status').innerHTML=Object.entries(STATUS).map(([k,t])=>`<option value="${k}">${t}</option>`).join(''); }
-    function updateAccounts(selected=null){
+    function formSelectValues(){ $('item-type').innerHTML=Object.entries(TYPES).map(([k,t])=>`<option value="${k}">${t}</option>`).join(''); $('item-status').innerHTML=Object.entries(STATUS).map(([k,t])=>`<option value="${k}">${t}</option>`).join(''); }
+    // Network picker: the client's accounts as checkbox chips; platforms without an account stay
+    // available (as before with "Sin cuenta específica"), collapsed when the client has accounts.
+    const networkChip = (value,platform,label,checked) => `<label class="network-chip"><input type="checkbox" name="network" value="${escapeHTML(value)}" ${checked?'checked':''}>${platformIcon(platform)}<span>${escapeHTML(label)}</span></label>`;
+    function renderNetworkPicker(selected){
       const accounts=state.accounts.filter(a=>a.clientId===$('item-client').value);
-      $('item-account').innerHTML='<option value="">Sin cuenta específica</option>'+accounts.map(a=>`<option value="${escapeHTML(a.id)}" ${a.id===selected?'selected':''}>${escapeHTML(compactAccountLabel(a))}</option>`).join('');
-      $('account-hint').textContent=accounts.length?'':'Sin cuentas registradas. Elegí una red social.';
-      updatePlatform();
+      const chosen=new Set(selected.filter(n=>n.accountId).map(n=>n.accountId)),loose=new Set(selected.filter(n=>!n.accountId).map(n=>n.platform));
+      const platformChips=`<div class="network-chips">${Object.entries(PLATFORM).map(([k,name])=>networkChip('p:'+k,k,name,loose.has(k))).join('')}</div>`;
+      $('item-networks').innerHTML=accounts.length?`<div class="network-chips">${accounts.map(a=>networkChip('a:'+a.id,a.platform,compactAccountLabel(a),chosen.has(a.id))).join('')}</div><details class="network-extra" ${loose.size?'open':''}><summary>Red sin cuenta específica</summary>${platformChips}</details>`:platformChips;
+      $('account-hint').textContent=accounts.length?'Elegí una o varias cuentas de este cliente.':'Sin cuentas registradas. Elegí una o varias redes sociales.';
     }
-    function updatePlatform(){
-      const account=state.accounts.find(a=>a.id===$('item-account').value&&a.clientId===$('item-client').value);
-      $('item-platform-field').hidden=!!account;
-      $('item-platform').disabled=!!account;if(account)$('item-platform').value=account.platform;
+    function selectedNetworks(clientId=$('item-client').value){
+      return [...$('item-networks').querySelectorAll('input[name=network]:checked')].map(input=>{
+        const kind=input.value.slice(0,2),value=input.value.slice(2);
+        if(kind==='a:'){const a=state.accounts.find(a=>a.id===value&&(clientId===null||a.clientId===clientId));return a?{platform:a.platform,accountId:a.id}:null;}
+        return Object.hasOwn(PLATFORM,value)?{platform:value,accountId:null}:null;
+      }).filter(Boolean);
+    }
+    function defaultNetworks(clientId,platforms){
+      const accounts=state.accounts.filter(a=>a.clientId===clientId);
+      if(!accounts.length)return platforms.map(platform=>({platform,accountId:null}));
+      const mapped=platforms.map(p=>accounts.find(a=>a.platform===p)).filter(Boolean).map(a=>({platform:a.platform,accountId:a.id}));
+      return mapped.length?mapped:accounts.length===1?[{platform:accounts[0].platform,accountId:accounts[0].id}]:[];
+    }
+    function changeItemClient(){
+      const platforms=[...new Set(selectedNetworks(null).map(n=>n.platform))];
+      renderNetworkPicker(defaultNetworks($('item-client').value,platforms.length?platforms:['instagram']));
     }
     function updateDateState(){ $('item-status').disabled=false;$('status-hint').textContent=$('item-date').value?'Elegí en qué etapa está tu contenido.':'Sin fecha se guarda en el banco, conservando su estado.'; }
     function openModal({id=null,date,idea=false}={}){
@@ -1946,8 +2023,7 @@
       $('modal-description').textContent=item?'Actualizá los datos de tu contenido.':'Completá los datos para empezar a organizarte.';
       $('item-title').value=item?.title||''; $('item-title').removeAttribute('aria-invalid'); $('item-date').removeAttribute('aria-invalid');
       $('item-client').innerHTML=clientOptions(item?.clientId||(state.clientFilter==='all'?PERSONAL:state.clientFilter));
-      $('item-platform').value=item?.platform||(state.platformFilter==='all'?'instagram':state.platformFilter);
-      updateAccounts(item?.accountId);
+      renderNetworkPicker(item?networksOf(item):defaultNetworks($('item-client').value,[state.platformFilter==='all'?'instagram':state.platformFilter]));
       $('item-type').value=item?.type||(idea?'post':'reel');
       $('item-text').value=item?.caption||'';
       $('item-date').value=date!==undefined?date:(item ? (item.date || '') : (idea?'':state.selectedDate));
@@ -1966,8 +2042,10 @@
       if(!title){ $('item-title').setAttribute('aria-invalid','true'); $('item-title').focus(); notify('Escribí un título o tema para continuar.',true); return; }
       const date=$('item-date').value||null;
       if(date&&!validDate(date)){ $('item-date').setAttribute('aria-invalid','true'); notify('Elegí una fecha válida.',true); $('item-date').focus(); return; }
+      const networks=selectedNetworks();
+      if(!networks.length){ notify('Elegí al menos una red social.',true); $('item-networks').querySelector('input')?.focus(); return; }
       const original=state.editingId?state.items.find(x=>x.id===state.editingId):null;
-      const item={...original,clientId:$('item-client').value,accountId:state.accounts.find(a=>a.id===$('item-account').value&&a.clientId===$('item-client').value)?.id||null,id:original?.id||uid(),title:title.slice(0,120),platform:$('item-platform').value,type:$('item-type').value,caption:$('item-text').value.slice(0,20000),date,status:$('item-status').value,createdAt:original?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()};
+      const item=withNetworks({...original,clientId:$('item-client').value,id:original?.id||uid(),title:title.slice(0,120),type:$('item-type').value,caption:$('item-text').value.slice(0,20000),date,status:$('item-status').value,createdAt:original?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()},networks);
       if(!cleanItem(item)) { notify('No se pudo validar el contenido.',true);return; }
       const before=[...state.items];
       if(original) state.items=state.items.map(x=>x.id===original.id?item:x); else state.items.push(item);
@@ -1998,12 +2076,128 @@
       if(file.size>20*1024*1024){notify('El archivo es demasiado grande para importar.',true);return;}
       try {
         const parsed=parseBackupJSON(await file.text());
+        if(isRecord(parsed)&&parsed.format===POSTS_FORMAT)throw Error('este archivo contiene sólo publicaciones. Usá «Importar únicamente publicaciones»');
         if(!parsed || parsed.app!==APP_NAME || ![1,2].includes(parsed.version))throw Error('Formato no compatible');
         const restored=normalizeData(parsed,parsed.version===1);
         if(!window.confirm(`Este respaldo contiene ${restored.items.length} contenidos, ${restored.clients.length-1} clientes y ${restored.accounts.length} cuentas. Se reemplazarán los ${state.items.length} contenidos, ${state.clients.length-1} clientes y ${state.accounts.length} cuentas actuales.\n\n¿Querés continuar?`))return;
         if(!commit(()=>Object.assign(state,restored)))return;
         state.page='calendar';state.focusDate=today();state.selectedDate=today();render();notify('Respaldo importado correctamente.');
       } catch(error){notify(`No se pudo importar el respaldo: ${error.message||'archivo no válido'}.`,true);}
+    }
+    // Posts-only import: validates the whole file first, then appends the new items to an existing
+    // client in one commit. Nothing existing is modified; any invalid record blocks the import.
+    // docs/importacion-publicaciones.md documents this exact format; keep both in sync.
+    const POSTS_FORMAT='planifica-tus-redes-publicaciones';
+    const POSTS_VERSION=1;
+    const IMPORT_ID=/^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/;
+    const POST_KEYS=['importId','title','caption','networks','type','status','date'];
+    const MAX_ITEMS=10000;
+    const handleKey = value => value.trim().replace(/^@/,'').toLocaleLowerCase('es');
+    function validatePostsImport(parsed,clientId){
+      const client=state.clients.find(c=>c.id===clientId);
+      const result={client,total:0,valid:0,items:[],duplicates:[],errors:[],fatal:''};
+      const fail=message=>{result.fatal=message;return result;};
+      if(!client)return fail('Elegí un cliente existente.');
+      if(!isRecord(parsed))return fail('El archivo debe contener un objeto JSON.');
+      if(parsed.app===APP_NAME&&Array.isArray(parsed.clients))return fail('Este archivo es un respaldo completo. Para restaurarlo, elegí «Restauración completa».');
+      if(parsed.format!==POSTS_FORMAT)return fail(`Falta "format": "${POSTS_FORMAT}" o tiene otro valor.`);
+      if(parsed.version!==POSTS_VERSION)return fail(`"version" debe ser el número ${POSTS_VERSION}.`);
+      const extra=Object.keys(parsed).filter(k=>!['format','version','items'].includes(k));
+      if(extra.length)return fail(`Propiedades no admitidas en el nivel principal: ${extra.join(', ')}.`);
+      if(!Array.isArray(parsed.items))return fail('"items" debe ser una lista de publicaciones.');
+      if(!parsed.items.length)return fail('El archivo no contiene publicaciones.');
+      result.total=parsed.items.length;
+      if(state.items.length+parsed.items.length>MAX_ITEMS)return fail(`La importación superaría el límite de ${MAX_ITEMS} contenidos guardados en este navegador.`);
+      const accounts=state.accounts.filter(a=>a.clientId===clientId),seen=new Set(),now=new Date().toISOString();
+      parsed.items.forEach((row,index)=>{
+        const label=`Publicación ${index+1}${isRecord(row)&&typeof row.importId==='string'?` (${row.importId})`:''}${isRecord(row)&&typeof row.title==='string'&&row.title.trim()?` «${row.title.trim().slice(0,60)}»`:''}`;
+        if(!isRecord(row)){result.errors.push(`${label}: debe ser un objeto.`);return;}
+        const problems=[];
+        const extraKeys=Object.keys(row).filter(k=>!POST_KEYS.includes(k));
+        if(extraKeys.length)problems.push(`propiedades no admitidas: ${extraKeys.join(', ')}`);
+        if(typeof row.importId!=='string'||!IMPORT_ID.test(row.importId))problems.push('"importId" es obligatorio: de 1 a 120 caracteres, sólo letras sin acentos, números, punto, guion y guion bajo, empezando por letra o número');
+        else if(seen.has(row.importId))problems.push('"importId" repetido dentro del archivo');
+        else seen.add(row.importId);
+        const title=typeof row.title==='string'?row.title.trim():'';
+        if(!title)problems.push('"title" es obligatorio y no puede estar vacío');
+        else if(title.length>120)problems.push(`"title" tiene ${title.length} caracteres; el máximo es 120`);
+        else if(/[\r\n\t]/.test(title))problems.push('"title" debe ocupar una sola línea, sin saltos de línea ni tabulaciones');
+        if(row.caption!==undefined&&typeof row.caption!=='string')problems.push('"caption" debe ser texto');
+        else if(typeof row.caption==='string'&&row.caption.length>20000)problems.push(`"caption" tiene ${row.caption.length} caracteres; el máximo es 20000`);
+        if(row.type!==undefined&&!Object.hasOwn(TYPES,row.type))problems.push(`"type" no válido; valores permitidos: ${Object.keys(TYPES).join(', ')}`);
+        if(row.status!==undefined&&!Object.hasOwn(STATUS,row.status))problems.push(`"status" no válido; valores permitidos: ${Object.keys(STATUS).join(', ')}`);
+        if(row.date!==undefined&&row.date!==null&&!validDate(row.date))problems.push('"date" debe ser null o una fecha real con formato AAAA-MM-DD');
+        const networks=[];
+        if(!Array.isArray(row.networks)||!row.networks.length)problems.push('"networks" debe ser una lista con al menos una red');
+        else if(row.networks.length>MAX_NETWORKS)problems.push(`"networks" admite hasta ${MAX_NETWORKS} redes`);
+        else row.networks.forEach(entry=>{
+          const platform=typeof entry==='string'?entry:isRecord(entry)?entry.platform:undefined;
+          if(!Object.hasOwn(PLATFORM,platform)){problems.push(`red no reconocida: ${JSON.stringify(platform??entry)}; valores permitidos: ${Object.keys(PLATFORM).join(', ')}`);return;}
+          let found=accounts.filter(a=>a.platform===platform);
+          if(isRecord(entry)){
+            if(Object.keys(entry).some(k=>!['platform','username'].includes(k))||typeof entry.username!=='string'||!entry.username.trim()){problems.push(`red ${JSON.stringify(entry)}: el objeto debe tener sólo "platform" y "username"`);return;}
+            found=found.filter(a=>handleKey(a.username)===handleKey(entry.username));
+            if(!found.length){problems.push(`el cliente «${client.name}» no tiene una cuenta de ${PLATFORM[platform]} con el usuario ${entry.username}`);return;}
+            if(found.length>1){problems.push(`el cliente «${client.name}» tiene ${found.length} cuentas de ${PLATFORM[platform]} con el usuario ${entry.username}; dejá sólo una en Clientes y cuentas`);return;}
+          }
+          if(!found.length){problems.push(`el cliente «${client.name}» no tiene configurada la red ${PLATFORM[platform]} (${platform})`);return;}
+          if(found.length>1){problems.push(`el cliente «${client.name}» tiene ${found.length} cuentas de ${PLATFORM[platform]}: indicá cuál con {"platform": "${platform}", "username": "…"}`);return;}
+          if(networks.some(n=>n.accountId===found[0].id)){problems.push(`la red ${PLATFORM[platform]} (${found[0].username}) está repetida`);return;}
+          networks.push({platform:found[0].platform,accountId:found[0].id});
+        });
+        if(problems.length){result.errors.push(`${label}: ${problems.join('; ')}.`);return;}
+        const item=cleanItem(withNetworks({id:uid(),title,caption:row.caption??'',type:row.type??'post',status:row.status??'idea',date:row.date??null,clientId,importId:row.importId,createdAt:now,updatedAt:now},networks));
+        if(!item){result.errors.push(`${label}: no es compatible con el modelo de contenido.`);return;}
+        result.valid++;
+        // Duplicate protection: the stable importId is remembered per client; titles are never used.
+        if(state.items.some(x=>x.clientId===clientId&&x.importId===row.importId))result.duplicates.push(label);
+        else result.items.push(item);
+      });
+      return result;
+    }
+    const importReady = result => !!result&&!result.fatal&&!result.errors.length&&result.items.length>0;
+    function importPreviewHTML(result){
+      if(result.fatal)return `<p class="import-status is-error" role="alert">${escapeHTML(result.fatal)} Tus datos no se modificaron.</p>`;
+      const errors=result.errors.length,rows=[['Cliente de destino',result.client.name],['Publicaciones detectadas',result.total],['Publicaciones válidas',result.valid],['Ya importadas (se omitirán)',result.duplicates.length],['Con errores',errors],...(errors?[]:[['Nuevas para agregar',result.items.length]])];
+      const status=errors?`No se importará nada hasta corregir ${errors===1?'el error':`los ${errors} errores`} del archivo. Tus datos no se modificaron.`:!result.items.length?'Todas las publicaciones de este archivo ya fueron importadas en este cliente. No hay nada nuevo para agregar.':`Se agregarán ${result.items.length} ${result.items.length===1?'publicación':'publicaciones'} a «${result.client.name}». No se modificará ni borrará nada existente.`;
+      const shown=result.errors.slice(0,50);
+      return `<dl class="import-summary">${rows.map(([k,v])=>`<dt>${escapeHTML(k)}</dt><dd>${escapeHTML(String(v))}</dd>`).join('')}</dl><p class="import-status ${importReady(result)?'':'is-error'}" ${errors?'role="alert"':''}>${escapeHTML(status)}</p>${shown.length?`<ul class="import-errors">${shown.map(e=>`<li>${escapeHTML(e)}</li>`).join('')}${errors>shown.length?`<li>… y ${errors-shown.length} errores más.</li>`:''}</ul>`:''}${result.duplicates.length?`<details class="import-duplicates"><summary>Ver publicaciones ya importadas (${result.duplicates.length})</summary><ul>${result.duplicates.map(d=>`<li>${escapeHTML(d)}</li>`).join('')}</ul></details>`:''}`;
+    }
+    function openImportDialog(){
+      let parsed=null,fileError='',result=null;
+      const preferred=state.clientFilter!=='all'&&state.clients.some(c=>c.id===state.clientFilter)?state.clientFilter:(state.clients.find(c=>c.id!==PERSONAL)?.id||PERSONAL);
+      manager('Importar datos',`<fieldset class="import-modes"><legend>¿Qué querés importar?</legend><label class="import-mode"><input type="radio" name="mode" value="full" checked><span><strong>Restauración completa</strong><small>Reemplaza todos tus contenidos, clientes y cuentas por los de un respaldo exportado desde esta aplicación.</small></span></label><label class="import-mode"><input type="radio" name="mode" value="posts"><span><strong>Importar únicamente publicaciones</strong><small>Agrega publicaciones a un cliente existente. No modifica ni borra nada de lo que ya tenés.</small></span></label></fieldset><p class="import-warning" id="import-full-warning"><strong>Atención:</strong> la restauración completa reemplaza todos los datos guardados en este navegador. Si querés conservarlos, exportá un respaldo antes de continuar.</p><div id="import-posts-fields" hidden><div class="field"><label for="import-client">Cliente de destino</label><select id="import-client" name="client">${clientOptions(preferred)}</select><p class="field-help" id="import-client-hint"></p></div><div class="field"><label for="import-posts-file">Archivo JSON de publicaciones</label><input id="import-posts-file" type="file" accept="application/json,.json"></div><div id="import-preview" aria-live="polite"></div></div>`,data=>{
+        if(data.get('mode')!=='posts'){$('import-file').click();return true;}
+        refresh(); // Validate again against the current data right before writing.
+        if(!importReady(result)){notify(fileError||result?.fatal||(result?.errors.length?'El archivo tiene errores. No se importó ninguna publicación.':result?'No hay publicaciones nuevas para importar.':'Seleccioná un archivo JSON de publicaciones.'),true);return false;}
+        const {items:added,duplicates,client}=result;
+        if(!commit(()=>{state.items=[...state.items,...added];}))return false;
+        const hidden=added.some(x=>!matches(x));
+        notify(`Se importaron ${added.length} ${added.length===1?'publicación':'publicaciones'} en «${client.name}».${duplicates.length?` ${duplicates.length} ya existían y se omitieron.`:''}${hidden?' Limpiá los filtros para verlas todas.':''}`);
+        return true;
+      },'Elegir archivo');
+      const form=$('manager-form'),submit=form.querySelector('[type=submit]');
+      function refresh(){
+        const posts=form.querySelector('input[name=mode]:checked').value==='posts',clientId=$('import-client').value;
+        const accounts=state.accounts.filter(a=>a.clientId===clientId);
+        $('import-posts-fields').hidden=!posts;$('import-full-warning').hidden=posts;
+        $('import-client-hint').textContent=accounts.length?`Redes configuradas: ${accounts.map(a=>`${PLATFORM[a.platform]} (${a.username})`).join(', ')}.`:'Este cliente no tiene cuentas configuradas. Agregalas en Clientes y cuentas antes de importar.';
+        result=parsed?validatePostsImport(parsed,clientId):null;
+        $('import-preview').innerHTML=fileError?`<p class="import-status is-error" role="alert">${escapeHTML(fileError)} Tus datos no se modificaron.</p>`:result?importPreviewHTML(result):'';
+        submit.textContent=!posts?'Elegir archivo de respaldo':importReady(result)?`Importar ${result.items.length} ${result.items.length===1?'publicación':'publicaciones'}`:'Importar publicaciones';
+        submit.disabled=posts&&!importReady(result);
+      }
+      async function loadFile(file){
+        parsed=null;fileError='';
+        if(file){
+          if(!/\.json$/i.test(file.name))fileError='Seleccioná un archivo JSON (.json).';
+          else if(file.size>20*1024*1024)fileError='El archivo es demasiado grande para importar.';
+          else try{parsed=parseBackupJSON(await file.text());}catch(error){fileError=`El archivo no es un JSON válido (${error.message||'error de lectura'}).`;}
+        }
+        refresh();
+      }
+      form.addEventListener('change',e=>{if(e.target.id==='import-posts-file')loadFile(e.target.files?.[0]);else if(e.target.name==='mode'||e.target.id==='import-client')refresh();});
+      refresh();
     }
     function handleAction(event) {
       if(event.target.closest('.drag-handle') && drag?.started)return;
@@ -2037,7 +2231,7 @@
       else if(a==='mode')changeMode(btn.dataset.mode);
       else if(a==='select-date'){const date=btn.dataset.date; if(!validDate(date))return;state.selectedDate=date;workTab='day';if(state.mode==='month'&&monthTitle(date)!==monthTitle(state.focusDate))state.focusDate=date;render();if(window.innerWidth<=790)requestAnimationFrame(()=>$('mobile-calendar-panel')?.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}));}
       else if(a==='export'){closeBackupMenu();exportBackup();}
-      else if(a==='import'){closeBackupMenu();$('import-file').click();}
+      else if(a==='import'){closeBackupMenu();openImportDialog();}
       else if(a==='backups')toggleBackupMenu();
     }
     function closeBackupMenu(){ $('mobile-backup-menu').classList.remove('open'); $('mobile-backup-icon').setAttribute('aria-expanded','false'); }
@@ -2086,8 +2280,9 @@
       if(!target||window.innerWidth<=790||drag||$('modal-overlay').classList.contains('open'))return;
       const item=state.items.find(x=>x.id===target.dataset.tooltipId);if(!item)return;
       hideCalendarTooltip();tooltipTarget=target;
-      const account=accountOf(item),tip=$('calendar-tooltip');
-      tip.innerHTML=`<strong>${escapeHTML(item.title)}</strong><p><span class="tooltip-label">Cliente:</span> ${escapeHTML(clientOf(item).name)}</p>${account?`<p><span class="tooltip-label">Cuenta:</span> ${escapeHTML(compactAccountLabel(account))}</p>`:`<p><span class="tooltip-label">Red social:</span> ${escapeHTML(PLATFORM[item.platform])}</p>`}<p><span class="tooltip-label">Tipo:</span> ${escapeHTML(TYPES[item.type])}</p><p><span class="tooltip-label">Estado:</span> ${escapeHTML(STATUS[item.status])}</p>`;
+      const networks=networksOf(item),tip=$('calendar-tooltip');
+      const networkLabel=networks.length>1?'Redes sociales':networkAccount(networks[0])?'Cuenta':'Red social';
+      tip.innerHTML=`<strong>${escapeHTML(item.title)}</strong><p><span class="tooltip-label">Cliente:</span> ${escapeHTML(clientOf(item).name)}</p><p><span class="tooltip-label">${networkLabel}:</span> ${escapeHTML(networkLabels(item,compactAccountLabel).join(', '))}</p><p><span class="tooltip-label">Tipo:</span> ${escapeHTML(TYPES[item.type])}</p><p><span class="tooltip-label">Estado:</span> ${escapeHTML(STATUS[item.status])}</p>`;
       tip.hidden=false;target.setAttribute('aria-describedby','calendar-tooltip');
       const rect=target.getBoundingClientRect(),box=tip.getBoundingClientRect();
       tip.style.left=`${Math.max(12,Math.min(rect.left,window.innerWidth-box.width-12))}px`;
@@ -2134,8 +2329,7 @@
       window.visualViewport.addEventListener('scroll',fitModal);
       fitModal();
     }
-    $('item-client').addEventListener('change',()=>updateAccounts());
-    $('item-account').addEventListener('change',updatePlatform);
+    $('item-client').addEventListener('change',changeItemClient);
     document.addEventListener('change',e=>{if(e.target.id==='filter-status'){progressStatusFilter=e.target.value;render();return;}if(e.target.id==='filter-client'||e.target.id==='filter-platform'){const field=e.target.id==='filter-client'?'clientFilter':'platformFilter';commit(()=>{state[field]=e.target.value;});}});
     // Mis bonos reuses the existing data model, commit/save, dialogs and notifications.
     window.PlanificaBonos?.init({state,commit,manager,notify,render,navigate,icon,platformIcon,PLATFORM,TYPES,STATUS,PERSONAL,uid,cleanItem,validDate,dateKey,parseDate,today,startWeek,accountLabel:compactAccountLabel,focusTarget,restoreFocus});

@@ -1,0 +1,33 @@
+{
+  "format": "planifica-tus-redes-publicaciones",
+  "version": 1,
+  "items": [
+    {
+      "importId": "ejemplo-reel-01-instagram",
+      "title": "Reel 1 — Tres errores al planificar tu contenido",
+      "caption": "GUION DE NARRACIÓN\n¿Te pasa que llegás al lunes sin saber qué publicar?\nHoy te cuento los tres errores más comunes al planificar tu contenido.\nUno: improvisar cada día.\nDos: no guardar las ideas cuando aparecen.\nTres: no revisar qué está listo antes de publicar.\nGuardá este video y empezá a planificar tu semana.\n\nINSTRUCCIONES DE GRABACIÓN\n- Formato vertical 9:16, luz natural de frente.\n- Plano medio mirando a cámara durante la introducción.\n- Mostrar en pantalla «1», «2» y «3» al nombrar cada error.\n- Cierre con el texto «Guardalo para tu próxima planificación».",
+      "networks": ["instagram"],
+      "type": "reel",
+      "status": "idea",
+      "date": null
+    },
+    {
+      "importId": "ejemplo-reel-02-tiktok",
+      "title": "Reel 2 — Cómo guardar una idea en diez segundos",
+      "caption": "GUION DE NARRACIÓN\nSe te ocurrió una idea y no querés perderla.\nAbrí tu banco de ideas, escribí el tema y guardalo sin fecha.\nDespués elegís cuándo publicarlo.\n\nINSTRUCCIONES DE GRABACIÓN\n- Grabación de pantalla del celular.\n- Ritmo rápido: cortes cada dos o tres segundos.\n- Subtítulos grandes durante todo el video.",
+      "networks": ["tiktok"],
+      "type": "reel",
+      "status": "idea",
+      "date": null
+    },
+    {
+      "importId": "ejemplo-reel-03-instagram-tiktok",
+      "title": "Reel 3 — ¿Qué tengo que publicar hoy?",
+      "caption": "GUION DE NARRACIÓN\n«¿Qué tengo que publicar hoy?» es la pregunta que más tiempo nos hace perder.\nLa respuesta está en planificar una vez por semana.\nElegí tus temas, asignales fecha y revisá cada mañana qué está listo.\n\nINSTRUCCIONES DE GRABACIÓN\n- Abrir con la pregunta escrita en pantalla.\n- Plano detalle del calendario semanal.\n- Mismo video para Instagram y TikTok: dejar margen inferior libre para los textos de cada red.",
+      "networks": ["instagram", "tiktok"],
+      "type": "reel",
+      "status": "idea",
+      "date": null
+    }
+  ]
+}
