@@ -8,11 +8,11 @@ import {tmpdir} from 'node:os';
 const root=resolve(import.meta.dirname,'..'),profile=await mkdtemp(join(tmpdir(),'planifica-bonos-'));
 const shots=join(root,'tests','visual-bonos');await mkdir(shots,{recursive:true});
 const csp=(await readFile(join(root,'_headers'),'utf8')).match(/Content-Security-Policy: (.+)/)[1];
-const FILES=['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg'];
+const FILES=['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg','fonts/inter-latin-wght.woff2'];
 const server=createServer(async(req,res)=>{
   const pathname=new URL(req.url,'http://localhost').pathname,file=pathname==='/'?'index.html':pathname.slice(1);
   if(!FILES.includes(file)){res.writeHead(404);res.end();return;}
-  res.writeHead(200,{'Content-Type':file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':'text/html; charset=utf-8','Content-Security-Policy':csp});res.end(await readFile(join(root,file)));
+  res.writeHead(200,{'Content-Type':file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':file.endsWith('.woff2')?'font/woff2':'text/html; charset=utf-8','Content-Security-Policy':csp});res.end(await readFile(join(root,file)));
 });
 await new Promise(ok=>server.listen(0,'127.0.0.1',ok));
 const url=`http://127.0.0.1:${server.address().port}/`;
@@ -223,7 +223,7 @@ await js(()=>document.getElementById('manager-dialog').close());
 
 // ---------- Original features still work ----------
 await click('#desktop-nav [data-page=progress]');
-check('Seguimiento cuenta las publicaciones importadas',await evaluate("document.querySelectorAll('.next-item').length")===after3.items.filter(x=>x.date).length);
+check('Seguimiento cuenta las publicaciones importadas',await evaluate("(()=>{const out=[],q=s=>document.querySelector(s),take=()=>out.push(...[...document.querySelectorAll('.next-item .post-title')].map(e=>e.textContent)),go=d=>{while(q('[data-dir='+d+']')&&!q('[data-dir='+d+']').disabled)q('[data-dir='+d+']').click()};go('prev');take();while(q('[data-dir=next]')&&!q('[data-dir=next]').disabled){q('[data-dir=next]').click();take()}go('prev');return out})().length")===after3.items.filter(x=>x.date).length);
 await click('#desktop-nav [data-page=calendar]');
 check('Calendario renderiza',await evaluate("!!document.querySelector('.month-grid')"));
 await click('#desktop-nav [data-page=clients]');

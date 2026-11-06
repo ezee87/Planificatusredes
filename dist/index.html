@@ -6,7 +6,8 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#f8faf7">
   <meta name="description" content="Organizá tus publicaciones, guardá ideas y seguí el progreso de tu contenido en un solo lugar.">
-  <link rel="icon" href="favicon.svg?v=799a988ea57e" type="image/svg+xml">
+  <link rel="icon" href="favicon.svg?v=c5b5f2837566" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>Planifica tus redes · Tu contenido, en orden</title>
   <link rel="stylesheet" href="commercial.css">
   <link rel="stylesheet" href="custom-selects.css">
@@ -1386,6 +1387,582 @@
     .import-duplicates summary { cursor:pointer; font-weight:600; }
     .import-duplicates ul { max-height:140px; margin:6px 0 0; padding-left:18px; overflow:auto; overflow-wrap:anywhere; }
     .import-errors { max-height:180px; margin:6px 0 0; padding-left:18px; overflow:auto; color:#9c3f3a; font-size:13px; line-height:1.4; overflow-wrap:anywhere; }
+
+    /* ==========================================================================
+       Diseño 2026 · Etapa 1 — base, navegación lateral y calendario.
+       Sólo presentación: mismos textos, controles, colores de marca y flujos.
+       Los tamaños se reducen únicamente en escritorio (≥791px); en mobile se
+       conservan los objetivos táctiles de 44px y los campos de 16px.
+       ========================================================================== */
+    :root {
+      --bg:#f4f6f2;
+      --line:#e4e9e2;
+      --line-soft:#edf1eb;
+      --shadow-xs:0 1px 2px rgba(23,40,30,.05);
+      --shadow-sm:0 1px 2px rgba(23,40,30,.04),0 2px 6px -2px rgba(23,40,30,.06);
+      --shadow-md:0 1px 2px rgba(23,40,30,.04),0 6px 16px -6px rgba(23,40,30,.10);
+      --shadow-lg:0 2px 6px rgba(23,40,30,.05),0 18px 40px -12px rgba(23,40,30,.22);
+      --shadow:var(--shadow-sm);
+      --ease:cubic-bezier(.2,.7,.2,1);
+      --tint-hover:rgba(80,115,92,.075);
+      --status-idea:#b3c1b5;
+      --status-preparation:#ddb062;
+      --status-ready:#7fabb0;
+      --status-published:#5f9068;
+    }
+    body { font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-feature-settings:"cv11"; text-rendering:optimizeLegibility; }
+    ::selection { background:#d6e7d8; color:var(--ink); }
+    .surface { border-color:var(--line); box-shadow:var(--shadow-sm); }
+    * { scrollbar-width:thin; scrollbar-color:#c9d3c8 transparent; }
+    .calendar-tooltip,.sidebar-backup-pop { border-color:var(--line); box-shadow:var(--shadow-lg); }
+
+    /* Botones y controles base */
+    .btn { transition:background-color .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease),transform .15s var(--ease); }
+    .btn-primary { background:var(--primary); box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 2px rgba(23,40,30,.18),0 3px 8px -2px rgba(59,96,72,.35); }
+    .btn-primary:hover:not(:disabled) { background:var(--primary-dark); box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 1px 2px rgba(23,40,30,.2),0 6px 14px -4px rgba(59,96,72,.45); }
+    .btn-outline { box-shadow:var(--shadow-xs); }
+    .btn-outline:hover:not(:disabled) { border-color:#c6d3c6; background:#f7faf6; }
+    .btn-muted { background:var(--primary-wash); }
+    .btn:active:not(:disabled) { transform:translateY(0) scale(.98); }
+    .icon-btn,.today-btn { box-shadow:var(--shadow-xs); transition:background-color .12s var(--ease),border-color .12s var(--ease),color .12s var(--ease); }
+    .icon-btn:hover,.today-btn:hover { background:#f5f8f4; border-color:#cfdacf; }
+
+    /* Encabezado de sección */
+    .eyebrow { color:var(--primary); font-weight:700; }
+    .eyebrow:before { background:var(--primary); box-shadow:0 0 0 3px rgba(80,115,92,.16); }
+    .page-header h1 { font-weight:720; }
+
+    /* Resumen compacto: un punto con el color de cada estado, igual que en Seguimiento. */
+    .metric-row--compact .metric { position:relative; border-color:var(--line); background:var(--paper); box-shadow:var(--shadow-xs); }
+    .metric-row--compact .metric::before { content:""; order:0; flex:none; width:8px; height:8px; border-radius:50%; background:var(--primary); }
+    .metric-row--compact .metric:nth-child(1)::before { background:transparent; box-shadow:inset 0 0 0 2px var(--primary); }
+    .metric-row--compact .metric:nth-child(2)::before { background:var(--status-preparation); }
+    .metric-row--compact .metric:nth-child(3)::before { background:var(--status-ready); }
+    .metric-row--compact .metric:nth-child(4)::before { background:var(--status-published); }
+    .metric-row--compact .metric-value { font-weight:700; font-variant-numeric:tabular-nums; }
+
+    /* Calendario: eventos con acento de estado a la izquierda (el punto sigue siendo el color del cliente). */
+    .cal-event { --accent:var(--status-idea); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 45%,transparent); transition:filter .12s var(--ease); }
+    .cal-event.preparation { --accent:var(--status-preparation); }
+    .cal-event.ready { --accent:var(--status-ready); }
+    .cal-event.published { --accent:var(--status-published); }
+    .cal-event:hover { filter:brightness(.98); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 90%,transparent); }
+    .calendar-day { border-color:var(--line-soft); transition:background-color .12s var(--ease); }
+    .calendar-day:nth-child(7n+6):not(.is-outside):not(.is-selected),.calendar-day:nth-child(7n):not(.is-outside):not(.is-selected) { background:#fcfdfb; }
+    .calendar-day.is-outside { background:#f8faf6; }
+    .calendar-day:hover:not(.drop-active):not(.is-selected) { background:#f7faf5; }
+    .calendar-day.is-selected { background:#f1f6ef; }
+    .is-today .day-number { box-shadow:0 2px 6px -1px rgba(59,96,72,.45); }
+    .weekday-row { border-color:var(--line); }
+    .status-pill { gap:5px; }
+    .status-pill::before { content:""; width:5px; height:5px; border-radius:50%; background:currentColor; opacity:.75; flex:none; }
+
+    /* Panel lateral del calendario: pestañas segmentadas como el selector Mes/Semana. */
+    .work-tabs { margin:8px 8px 0; padding:3px; gap:2px; border:1px solid var(--line-soft); border-radius:10px; background:#f0f4ee; }
+    .work-tabs button { color:#566a5c; transition:background-color .12s var(--ease),color .12s var(--ease); }
+    .work-tabs button:hover:not(.active) { color:var(--primary-dark); background:rgba(255,255,255,.6); }
+    .work-tabs button.active { background:var(--paper); color:var(--primary-dark); box-shadow:var(--shadow-xs); }
+    .work-panel-scroll { margin-top:4px; }
+    .work-panel .post-card,.work-panel .idea-card { background:var(--paper); border-color:var(--line); transition:border-color .12s var(--ease),box-shadow .12s var(--ease); }
+    .work-panel .post-card:hover,.work-panel .idea-card:hover { border-color:#cfdbcf; box-shadow:var(--shadow-sm); }
+    .segmented { background:#f0f4ee; border-color:var(--line-soft); }
+    .segmented button { transition:background-color .12s var(--ease),color .12s var(--ease); }
+    .segmented button:hover:not(.active) { color:var(--primary-dark); }
+    .segmented button.active { box-shadow:var(--shadow-xs); }
+
+    @media (min-width:791px) {
+      body { font-size:14px; }
+      :root { --sidebar:228px; }
+      .app.is-collapsed { --sidebar:68px; }
+
+      /* Navegación lateral: integrada al fondo, ítem activo como tarjeta con indicador. */
+      .sidebar { padding:16px 12px 12px; background:var(--bg); border-right-color:var(--line); }
+      .sidebar .brand { gap:10px; padding:4px 6px 20px; }
+      .sidebar .brand-mark { width:34px; height:34px; border-radius:10px; box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 10px -3px rgba(59,96,72,.45); }
+      .sidebar .brand-mark svg { width:19px; height:19px; }
+      .sidebar .brand-name { font-size:15px; font-weight:720; letter-spacing:-.4px; line-height:1.15; }
+      .sidebar .brand-tag { font-size:12px; margin-top:3px; color:#5d6e62; line-height:1.3; }
+      .sidebar-toggle { top:21px; right:-13px; width:26px; height:26px; display:grid; place-items:center; padding:0 0 2px; border-color:var(--line-strong); border-radius:50%; background:var(--paper); color:#4f6a57; font-size:17px; box-shadow:var(--shadow-sm); transition:background-color .12s var(--ease),color .12s var(--ease),border-color .12s var(--ease); }
+      .sidebar-toggle:hover { background:var(--primary); border-color:var(--primary); color:#fff; }
+      .app.is-collapsed .sidebar-toggle { position:absolute; top:21px; right:-13px; margin:0; order:0; }
+      .app.is-collapsed .sidebar .brand { order:0; padding:4px 0 20px; }
+      .nav-caption { margin:4px 10px 6px; font-size:11px; font-weight:700; letter-spacing:.09em; color:#5f7264; }
+      .nav { gap:2px; }
+      .nav-btn { position:relative; min-height:36px; padding:7px 10px; gap:10px; border-radius:9px; font-size:13.5px; font-weight:560; color:#4c6153; transition:background-color .12s var(--ease),color .12s var(--ease),box-shadow .12s var(--ease); }
+      .nav-btn svg { width:18px; height:18px; color:#61786a; }
+      .nav-btn:hover:not(.active) { background:var(--tint-hover); color:var(--primary-dark); }
+      .nav-btn.active { background:var(--paper); color:var(--primary-dark); font-weight:650; box-shadow:var(--shadow-sm),inset 0 0 0 1px var(--line); }
+      .nav-btn.active svg { color:var(--primary); }
+      .nav .nav-btn.active::before { content:""; position:absolute; left:-12px; top:9px; bottom:9px; width:3px; border-radius:0 3px 3px 0; background:var(--primary); }
+      .nav-count { min-width:22px; height:20px; padding:0 6px; line-height:20px; font-size:11.5px; font-weight:650; color:var(--primary-dark); background:#e3ece2; }
+      .nav-btn.active .nav-count { background:var(--primary-wash); }
+      .app.is-collapsed .nav-btn { min-height:38px; padding:8px; }
+      .app.is-collapsed .nav .nav-btn.active::before { left:-10px; }
+      .sidebar-bottom { padding-top:10px; border-top:1px solid var(--line); }
+      .sidebar-bottom .commercial-help-button { margin-bottom:4px; }
+      .backup-btn { min-height:32px; padding:6px 10px; gap:9px; border-radius:8px; font-size:13px; font-weight:550; color:#4f6456; transition:background-color .12s var(--ease),color .12s var(--ease); }
+      .backup-btn svg { width:16px; height:16px; }
+      .backup-btn:hover { background:var(--tint-hover); color:var(--primary-dark); }
+      .backup-compact { width:40px; height:40px; border-radius:10px; font-size:20px; }
+
+      /* Área principal y encabezado */
+      .main { padding:20px clamp(16px,2.2vw,32px) 16px; }
+      .page-header { margin-bottom:14px; gap:16px; }
+      .eyebrow { font-size:11px; letter-spacing:.1em; margin-bottom:5px; }
+      .eyebrow:before { width:5px; height:5px; }
+      .page-header h1 { font-size:26px; line-height:1.15; letter-spacing:-.75px; margin-bottom:3px; }
+      .lead { font-size:13px; }
+      .btn { min-height:36px; padding:7px 14px; gap:7px; border-radius:9px; font-size:13.5px; font-weight:620; }
+      .btn svg { width:16px; height:16px; }
+      .page-header .btn-primary { padding-inline:14px 16px; }
+
+      /* Resumen y filtros */
+      .metric-row--compact { gap:8px; margin-bottom:12px; }
+      .metric-row--compact .metric { min-height:0; padding:8px 12px; gap:8px; border-radius:10px; }
+      .metric-row--compact .metric-value { font-size:16px; letter-spacing:-.2px; }
+      .metric-row--compact .metric-label { font-size:12.5px; font-weight:550; color:#566b5d; }
+      .global-filters { gap:14px; margin-bottom:12px; }
+      .global-filters label { gap:7px; font-size:12px; font-weight:550; color:#5a6e60; }
+      .global-filters .dom-select,.global-filters select { width:168px; }
+      .global-filters .dom-select-button,.global-filters select { min-height:32px; height:32px; padding:5px 30px 5px 10px; border-radius:8px; font-size:13px; background:var(--paper); box-shadow:var(--shadow-xs); }
+      .global-filters .dom-select-button::after { right:11px; width:6px; height:6px; top:calc(50% - 4px); }
+      .global-filters .text-btn { min-height:32px; font-size:12.5px; }
+
+      /* Barra de herramientas del calendario */
+      .board-grid { gap:12px; }
+      .board-grid > .surface { border-radius:14px; box-shadow:var(--shadow-sm); }
+      .board-grid > .surface:first-child > .toolbar { min-height:52px; padding:9px 12px; gap:8px; }
+      .range-label { font-size:15px; font-weight:680; letter-spacing:-.3px; color:var(--ink); margin-right:8px; }
+      .range-controls,.view-controls { gap:4px; }
+      .toolbar .icon-btn { width:30px; height:30px; border-radius:8px; }
+      .toolbar .icon-btn svg { width:15px; height:15px; }
+      .toolbar .today-btn { min-height:30px; padding:4px 10px; border-radius:8px; font-size:12.5px; font-weight:620; color:#4a6151; }
+      .segmented { padding:3px; gap:2px; border-radius:9px; }
+      .segmented button { min-height:26px; padding:3px 11px; border-radius:6px; font-size:12.5px; font-weight:600; }
+
+      /* Grilla mensual */
+      .weekday-row { min-height:28px; }
+      .weekday-row span { padding:5px; font-size:11px; font-weight:650; letter-spacing:.08em; color:#627468; }
+      .month-grid { grid-auto-rows:80px; }
+      .calendar-day { padding:3px 4px; }
+      .cal-day-top { min-height:24px; margin-bottom:2px; }
+      .day-number { width:24px; height:24px; min-width:24px; font-size:12.5px; font-weight:620; }
+      .day-add { width:24px; height:24px; min-width:24px; border-radius:7px; }
+      .day-add svg { width:14px; height:14px; }
+      .cal-event { height:22px; min-height:22px; margin-bottom:2px; padding:0 3px 0 6px; border-radius:6px; }
+      .cal-event-content { height:22px; min-height:22px; gap:5px; padding:0; font-size:12px; font-weight:520; }
+      .cal-event-dot { width:6px; height:6px; }
+      .day-more { min-height:18px; padding:1px 5px; border-radius:5px; font-size:11.5px; font-weight:620; }
+
+      /* Semana */
+      .week-day { border-color:var(--line-soft); }
+      .week-day-head .weekday { font-size:11px; font-weight:650; letter-spacing:.07em; color:#5d7163; }
+      .week-day-head .date-circle { width:30px; height:30px; font-size:15px; font-weight:650; }
+      .week-day.is-today .date-circle { box-shadow:0 2px 6px -1px rgba(59,96,72,.45); }
+      .week-event { border-color:var(--line); border-radius:9px; box-shadow:var(--shadow-xs); transition:border-color .12s var(--ease),box-shadow .12s var(--ease); }
+      .week-event:hover { border-color:#cfdbcf; box-shadow:var(--shadow-sm); }
+      .week-add { min-height:30px; border-radius:8px; font-size:12.5px; }
+
+      /* Panel lateral */
+      .work-tabs button { min-height:32px; padding:6px 6px; font-size:12.5px; border-radius:7px; }
+      .work-panel .selected-day-heading { padding:12px 12px 8px; }
+      .work-panel .selected-day-heading h3 { font-size:14px; font-weight:680; letter-spacing:-.2px; }
+      .work-panel .selected-day-heading p { font-size:12px; }
+      .work-panel .selected-day-heading .btn { min-height:30px; padding:4px 11px; font-size:12.5px; }
+      .work-panel .card-list { gap:6px; }
+      .work-panel .post-card { padding:9px 10px; border-radius:10px; }
+      .work-panel .post-title { font-size:13px; }
+      .work-panel .post-meta { font-size:11.5px; }
+      .work-panel .post-actions .subtle-icon { width:30px; min-width:30px; height:30px; border-radius:7px; }
+      .work-panel .post-actions .subtle-icon svg { width:15px; height:15px; }
+      .work-panel .rail-heading h2 { font-size:14px; font-weight:680; }
+      .work-panel .rail-desc { font-size:12px; }
+      .work-panel .idea-card { padding:9px 10px; border-radius:10px; }
+      .work-panel .idea-card h3 { font-size:13px; }
+      .work-panel .idea-card p { font-size:12px; }
+      .work-panel .idea-card .subtle-icon,.work-panel .idea-card .text-btn { min-height:30px; height:30px; }
+      .work-panel .idea-card .text-btn { font-size:12.5px; }
+      .work-panel .status-pill { font-size:11px; }
+      .status-pill { padding:3px 8px; font-size:12px; }
+      .status-pill::before { width:5px; height:5px; }
+      .subtle-icon { transition:background-color .12s var(--ease),color .12s var(--ease); }
+      .app-footer { font-size:12px; }
+    }
+
+    /* Escritorio con mouse: acciones secundarias visibles al pasar el cursor o con el teclado. */
+    @media (min-width:791px) and (hover:hover) and (pointer:fine) {
+      .calendar-day .day-add { opacity:0; transition:opacity .12s var(--ease),background-color .12s var(--ease); }
+      .calendar-day:hover .day-add,.calendar-day:focus-within .day-add,.calendar-day.is-selected .day-add { opacity:1; }
+      .cal-event { position:relative; }
+      .cal-event .tiny-grip { position:absolute; top:0; right:0; bottom:0; width:20px; height:auto; border-radius:0 6px 6px 0; background:inherit; opacity:0; transition:opacity .12s var(--ease); }
+      .cal-event:hover .tiny-grip,.cal-event:focus-within .tiny-grip,body.dragging .cal-event .tiny-grip { opacity:1; }
+      .cal-event .tiny-grip svg { width:13px; height:13px; }
+    }
+    /* --------------------------------------------------------------------------
+       Jerarquía: el calendario es la única superficie blanca elevada; el resumen
+       usa el color de cada estado y el panel lateral queda en segundo plano.
+       -------------------------------------------------------------------------- */
+    :root {
+      --idea-wash:#edf1ec;        --idea-ink:#3f5446;
+      --prep-wash:#fbe8c3;        --prep-ink:#6b4a14;
+      --ready-wash:#dbecef;       --ready-ink:#2b5862;
+      --pub-wash:#dbeedd;         --pub-ink:#2a5f37;
+    }
+
+    /* Resumen: pastillas tonales sin borde ni sombra, con el color de su estado. */
+    .metric-row--compact .metric { border-color:transparent; box-shadow:none; background:var(--primary-wash); }
+    .metric-row--compact .metric:nth-child(1) { background:#e7efe5; }
+    .metric-row--compact .metric:nth-child(1) .metric-value,.metric-row--compact .metric:nth-child(1) .metric-label { color:var(--primary-dark); }
+    .metric-row--compact .metric:nth-child(2) { background:#fbecd0; }
+    .metric-row--compact .metric:nth-child(2) .metric-value,.metric-row--compact .metric:nth-child(2) .metric-label { color:var(--prep-ink); }
+    .metric-row--compact .metric:nth-child(3) { background:#e0eef1; }
+    .metric-row--compact .metric:nth-child(3) .metric-value,.metric-row--compact .metric:nth-child(3) .metric-label { color:var(--ready-ink); }
+    .metric-row--compact .metric:nth-child(4) { background:#e1f0e3; }
+    .metric-row--compact .metric:nth-child(4) .metric-value,.metric-row--compact .metric:nth-child(4) .metric-label { color:var(--pub-ink); }
+    .metric-row--compact .metric-label { font-weight:600; }
+
+    /* Eventos: tonos de estado más definidos para que el contenido sea lo que se lee primero. */
+    .cal-event { background:var(--idea-wash); }
+    .cal-event .cal-event-content { color:var(--idea-ink); }
+    .cal-event.preparation { background:var(--prep-wash); }
+    .cal-event.preparation .cal-event-content { color:var(--prep-ink); }
+    .cal-event.ready { background:var(--ready-wash); }
+    .cal-event.ready .cal-event-content { color:var(--ready-ink); }
+    .cal-event.published { background:var(--pub-wash); }
+    .cal-event.published .cal-event-content { color:var(--pub-ink); }
+    .cal-event .cal-event-dot { box-shadow:0 0 0 1.5px rgba(255,255,255,.85); }
+    .month-grid :is(button,a):focus-visible,.board-grid > .work-panel :is(button,a):focus-visible { outline:2px solid var(--primary-dark); outline-offset:1px; }
+
+    /* Ritmo de la grilla: días con contenido marcados, hoy con fondo propio, otros meses apagados. */
+    .calendar-day .day-number { color:#66786b; font-weight:560; }
+    .calendar-day.has-posts:not(.is-today):not(.is-outside) .day-number { color:var(--ink); font-weight:720; }
+    .calendar-day.is-outside { background:#f3f5f1; }
+    .calendar-day.is-outside .day-number { color:#5f6b62; font-weight:500; }
+    .month-grid .calendar-day.is-today:not(.is-selected) { background:#f2f8f0; }
+    .calendar-day.is-today .day-number { color:#fff; font-weight:720; }
+    .calendar-day.is-selected { background:#eef5ec; box-shadow:inset 0 0 0 1.5px var(--primary); }
+
+    /* El calendario lidera: más elevación y encabezado con identidad propia. */
+    .board-grid > .surface:first-child { border-color:#dfe6dd; box-shadow:0 1px 2px rgba(23,40,30,.05),0 10px 30px -12px rgba(23,40,30,.16); }
+    .board-grid > .surface:first-child > .toolbar { background:linear-gradient(180deg,#fbfdfa,#fff); }
+    .weekday-row { background:#f7f9f6; }
+    .range-label { color:var(--ink); font-weight:720; }
+
+    /* Panel lateral en segundo plano: apoyado sobre el fondo, las tarjetas sí son blancas. */
+    .board-grid > .work-panel { background:#eef2ec; border-color:transparent; box-shadow:none; }
+    .board-grid > .work-panel .work-tabs { background:#e3e9e1; border-color:transparent; }
+    .board-grid > .work-panel .work-tabs button { color:#4c6153; }
+    .board-grid > .work-panel .selected-day-panel { background:transparent; }
+    .board-grid > .work-panel .selected-day-heading p,.board-grid > .work-panel .rail-desc,.board-grid > .work-panel .day-empty p,.board-grid > .work-panel .bank-drop-hint { color:#53675a; }
+    .board-grid > .work-panel .btn-muted { background:var(--paper); box-shadow:var(--shadow-xs); }
+    .board-grid > .work-panel .btn-muted:hover:not(:disabled) { background:#f7faf6; }
+    .board-grid > .work-panel .day-empty { flex-direction:column; align-items:flex-start; gap:6px; }
+    .board-grid > .work-panel .day-empty,.board-grid > .work-panel .empty-small { background:rgba(255,255,255,.55); }
+
+    /* --------------------------------------------------------------------------
+       Calendario: métricas como tarjetas y filtros integrados al contenedor.
+       -------------------------------------------------------------------------- */
+    #metrics.metric-row--cards { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
+    #metrics.metric-row--cards .metric { display:grid; grid-template-columns:auto minmax(0,1fr); grid-template-areas:"icon value" "icon label" "icon foot"; column-gap:12px; row-gap:0; align-items:center; padding:11px 14px; min-height:0; border:1px solid rgba(23,40,30,.06); border-radius:12px; box-shadow:var(--shadow-xs); background:var(--primary-wash); }
+    #metrics.metric-row--cards .metric-top { display:contents; }
+    #metrics.metric-row--cards .metric-icon { grid-area:icon; width:38px; height:38px; border-radius:11px; background:rgba(255,255,255,.7); box-shadow:inset 0 0 0 1px rgba(23,40,30,.05); }
+    #metrics.metric-row--cards .metric-icon svg { width:21px; height:21px; stroke-width:1.9; }
+    #metrics.metric-row--cards .metric-value { grid-area:value; margin:0; font-size:22px; line-height:1.1; font-weight:720; letter-spacing:-.5px; font-variant-numeric:tabular-nums; }
+    #metrics.metric-row--cards .metric-label { grid-area:label; font-size:13px; font-weight:650; line-height:1.3; }
+    #metrics.metric-row--cards .metric-foot { grid-area:foot; margin:1px 0 0; font-size:11.5px; line-height:1.3; }
+    #metrics.metric-row--cards .metric::before { display:none; }
+    #metrics.metric-row--cards .metric:nth-child(1) { background:#e7efe5; }
+    #metrics.metric-row--cards .metric:nth-child(2) { background:#fbecd0; }
+    #metrics.metric-row--cards .metric:nth-child(3) { background:#e0eef1; }
+    #metrics.metric-row--cards .metric:nth-child(4) { background:#e1f0e3; }
+    #metrics.metric-row--cards .metric:nth-child(1) :is(.metric-value,.metric-label,.metric-foot,.metric-icon) { color:var(--primary-dark); }
+    #metrics.metric-row--cards .metric:nth-child(2) :is(.metric-value,.metric-label,.metric-foot,.metric-icon) { color:var(--prep-ink); }
+    #metrics.metric-row--cards .metric:nth-child(3) :is(.metric-value,.metric-label,.metric-foot,.metric-icon) { color:var(--ready-ink); }
+    #metrics.metric-row--cards .metric:nth-child(4) :is(.metric-value,.metric-label,.metric-foot,.metric-icon) { color:var(--pub-ink); }
+    #metrics.metric-row--cards .metric:nth-child(n) .metric-icon { background:rgba(255,255,255,.7); }
+
+    /* Filtros dentro del contenedor del calendario, entre la navegación y la grilla. */
+    .cal-filters { display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; margin:0; padding:9px 14px; border-top:1px solid var(--line-soft); background:#fafbf8; }
+    .cal-filters .filter-empty { flex-basis:100%; }
+    .board-grid > .surface:first-child > .cal-filters { grid-column:1/-1; }
+    .cal-filters + .weekday-row,.cal-filters + .desktop-week-view .week-grid { border-top:1px solid var(--line-soft); }
+    .page-header:has(+ #metrics.metric-row--cards) { margin-bottom:18px; }
+    /* Cliente elegido: el punto de color vive dentro del selector, sin mover ni ensanchar el filtro. */
+    .filter-client-control { position:relative; }
+    .filter-client-control .filter-client-dot { position:absolute; left:11px; top:50%; width:9px; height:9px; margin-top:-4.5px; z-index:2; pointer-events:none; box-shadow:0 0 0 2px #fff,0 0 0 3px rgba(23,40,30,.12); }
+    .filter-client-control:has(.filter-client-dot) .dom-select-button,.filter-client-control:has(.filter-client-dot) select { padding-left:28px; }
+
+    @media (min-width:791px) {
+      .cal-filters label { gap:7px; }
+      .cal-filters .dom-select,.cal-filters select { width:156px; }
+      .cal-filters .dom-select-button,.cal-filters select { min-height:30px; height:30px; background:var(--paper); }
+      .cal-filters .text-btn { min-height:30px; }
+    }
+    @media (max-width:1100px) and (min-width:791px) {
+      #metrics.metric-row--cards .metric-foot { display:none; }
+    }
+    @media (max-width:790px) {
+      #metrics.metric-row--cards { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+      #metrics.metric-row--cards .metric { padding:9px 11px; column-gap:10px; }
+      #metrics.metric-row--cards .metric-icon { width:34px; height:34px; border-radius:10px; }
+      #metrics.metric-row--cards .metric-icon svg { width:19px; height:19px; }
+      #metrics.metric-row--cards .metric-value { font-size:20px; }
+      #metrics.metric-row--cards .metric-label { font-size:13px; }
+      #metrics.metric-row--cards .metric-foot { font-size:11px; }
+      .cal-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; padding:10px; }
+      .cal-filters label { display:flex; flex-direction:column; align-items:stretch; gap:3px; flex:none; min-width:0; }
+      .cal-filters .dom-select,.cal-filters select { width:100%; max-width:none; }
+      .cal-filters label:nth-of-type(3) { grid-column:1/-1; }
+      .cal-filters .text-btn,.cal-filters .filter-empty { grid-column:1/-1; }
+    }
+    @media (max-width:530px) {
+      #metrics.metric-row--cards .metric-foot { display:none; }
+      #metrics.metric-row--cards .metric { min-height:52px; }
+    }
+
+    /* ==========================================================================
+       Diseño 2026 · Etapa 2 — Banco de ideas, Seguimiento y Clientes y cuentas.
+       ========================================================================== */
+    /* Banco de ideas: la superficie principal lidera; tarjetas con acciones claras. */
+    .ideas-toolbar { border-bottom:1px solid var(--line-soft); margin-bottom:12px; }
+    #page-content > .surface:has(.ideas-toolbar) { border-color:#dfe6dd; box-shadow:0 1px 2px rgba(23,40,30,.05),0 10px 30px -12px rgba(23,40,30,.16); }
+    .idea-grid .idea-card { background:var(--paper); border-color:var(--line); box-shadow:var(--shadow-xs); transition:border-color .14s var(--ease),box-shadow .14s var(--ease),transform .14s var(--ease); }
+    .idea-grid .idea-card:hover { border-color:#c6d6c6; box-shadow:var(--shadow-md); transform:translateY(-1px); }
+    .idea-grid { align-items:stretch; }
+    .idea-grid .idea-card { display:flex; flex-direction:column; }
+    .idea-grid .idea-card-bottom { margin-top:auto; padding-top:8px; border-top:1px solid var(--line-soft); }
+    .idea-grid .idea-card p { margin-bottom:10px; }
+    .idea-grid .idea-card .text-btn { padding:0 10px; min-height:32px; border-radius:8px; background:var(--primary-wash); color:var(--primary-dark); transition:background-color .12s var(--ease); }
+    .idea-grid .idea-card .text-btn:hover { background:#dbe9d9; color:var(--primary-dark); }
+    .idea-label { background:var(--primary-wash); color:var(--primary-dark); }
+    .ideas-help { border-top:1px solid var(--line-soft); padding-top:12px; }
+
+    /* Seguimiento: mismas tarjetas de métricas que el Calendario y paneles con jerarquía. */
+    .progress-panel { box-shadow:0 1px 2px rgba(23,40,30,.05),0 10px 30px -12px rgba(23,40,30,.16); border-color:#dfe6dd; }
+    .progress-number strong { color:var(--primary-dark); }
+    .progress-bar { height:12px; background:#e9eee7; box-shadow:inset 0 1px 2px rgba(23,40,30,.08); gap:2px; }
+    .progress-bar span { border-radius:3px; }
+    .legend-row { padding:5px 0; border-bottom:1px solid var(--line-soft); }
+    .legend-row:last-child { border-bottom:0; }
+    .legend-dot { width:10px; height:10px; border-radius:50%; }
+    .progress-layout > .surface:last-child { background:#eef2ec; border-color:transparent; box-shadow:none; }
+    .progress-layout > .surface:last-child .next-item { background:var(--paper); border-color:var(--line); transition:border-color .12s var(--ease),box-shadow .12s var(--ease); }
+    .progress-layout > .surface:last-child .next-item:hover { border-color:#cbdacb; box-shadow:var(--shadow-sm); }
+    .progress-layout > .surface:last-child .panel-desc { color:#53675a; }
+    .date-badge { background:var(--primary-wash); color:var(--primary-dark); }
+    .date-badge span { color:var(--primary-dark); }
+
+    /* Clientes y cuentas: tarjetas con encabezado definido y acciones discretas. */
+    .clients-count { display:inline-flex; align-items:center; margin:0 0 12px; padding:4px 10px; border-radius:999px; background:var(--primary-wash); color:var(--primary-dark); font-size:12.5px; font-weight:600; }
+    .client-card { border-color:var(--line); box-shadow:var(--shadow-sm); transition:border-color .14s var(--ease),box-shadow .14s var(--ease); }
+    .client-card:hover { border-color:#c9d8c9; box-shadow:var(--shadow-md); }
+    .client-card header { padding-bottom:8px; }
+    .client-card h2 { display:flex; align-items:center; gap:7px; }
+    .client-dot { width:10px; height:10px; box-shadow:0 0 0 3px rgba(255,255,255,.9),0 0 0 4px rgba(23,40,30,.1); }
+    .client-card header .personal-caption { color:var(--primary-dark); font-weight:600; }
+    .account-row { border-top-color:var(--line-soft); }
+    .account-platform-icon { width:30px; height:30px; margin-left:-2px; border-radius:8px; background:var(--primary-wash); color:var(--primary-dark); }
+    .account-row .subtle-icon { transition:background-color .12s var(--ease),color .12s var(--ease),opacity .12s var(--ease); }
+    .client-card > .text-btn,.client-account-inner > .text-btn { margin-top:2px; }
+
+    @media (min-width:791px) {
+      .ideas-toolbar { padding:12px 16px; margin-bottom:10px; }
+      .ideas-toolbar h2 { font-size:16px; font-weight:680; letter-spacing:-.2px; }
+      .ideas-toolbar p { font-size:12.5px; }
+      .idea-grid { gap:10px; padding:0 16px 14px; grid-template-columns:repeat(auto-fill,minmax(235px,1fr)); }
+      .idea-grid .idea-card { padding:11px; }
+      .idea-grid .idea-card h3 { font-size:14.5px; }
+      .idea-grid .idea-card p { font-size:13px; }
+      .idea-grid .idea-card .text-btn { font-size:12.5px; }
+      .idea-grid .idea-card .subtle-icon { width:32px; height:32px; }
+      .idea-grid .idea-card-bottom { min-height:0; }
+      .ideas-help { font-size:12px; }
+      .progress-panel h2 { font-size:17px; }
+      .progress-number strong { font-size:38px; }
+      .legend-row { font-size:13.5px; }
+      .progress-panel .panel-desc { font-size:12.5px; }
+      .next-item .post-title { font-size:13.5px; }
+      .next-item .subtle-icon { width:34px; height:34px; }
+      .client-card { padding:12px 14px; }
+      .client-card h2 { font-size:15.5px; }
+      .client-actions .subtle-icon { width:32px; height:32px; min-width:32px; }
+      .client-account-inner > .text-btn,.client-card > .text-btn { min-height:34px; font-size:12.5px; }
+      .account-row { min-height:44px; }
+      .account-info strong { font-size:13.5px; }
+    }
+    /* Con mouse: las acciones secundarias se atenúan y se activan al pasar el cursor o con teclado. */
+    @media (min-width:791px) and (hover:hover) and (pointer:fine) {
+      .client-card .client-actions .subtle-icon,.client-card .account-row .subtle-icon { opacity:.55; }
+      .client-card:hover .client-actions .subtle-icon,.client-card:focus-within .client-actions .subtle-icon,.account-row:hover .subtle-icon,.account-row:focus-within .subtle-icon { opacity:1; }
+      .idea-grid .idea-card .drag-handle { opacity:.45; transition:opacity .12s var(--ease),background-color .12s var(--ease); }
+      .idea-grid .idea-card:hover .drag-handle,.idea-grid .idea-card:focus-within .drag-handle { opacity:1; }
+    }
+    @media (max-width:790px) {
+      .ideas-toolbar { margin-bottom:6px; }
+      .idea-grid .idea-card .text-btn { min-height:44px; padding:0 12px; }
+    }
+
+    /* --------------------------------------------------------------------------
+       Ajustes de la ronda 3: filtros del calendario con menú abierto, panel lateral
+       contraíble, "Limpiar filtros" estable en mobile y Seguimiento en escritorio.
+       -------------------------------------------------------------------------- */
+    .panel-toggle { display:none; }
+    .panel-toggle[aria-pressed="true"] { background:var(--primary-wash); border-color:#c9d9c9; color:var(--primary-dark); }
+    @media (min-width:791px) {
+      .panel-toggle { display:grid; margin-left:2px; }
+      .board-grid > .surface:first-child { container-type:inline-size; container-name:cal; }
+      .board-grid.is-panel-collapsed,.board-grid.is-panel-collapsed.is-week { grid-template-columns:minmax(0,1fr)!important; }
+      .board-grid.is-panel-collapsed > .work-panel { display:none; }
+    }
+    /* Con el menú abierto el calendario es más angosto: Cliente y Red social arriba, Estado alineado bajo Cliente. */
+    @media (min-width:791px) {
+      @container cal (max-width:760px) {
+        .cal-filters { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px 12px; }
+        .cal-filters label { display:grid; grid-template-columns:66px minmax(0,1fr); align-items:center; gap:7px; min-width:0; }
+        .cal-filters label .dom-select,.cal-filters label select,.cal-filters label .filter-client-control { flex:1; min-width:0; width:100%; max-width:none; }
+        .cal-filters .filter-client-control { display:flex; }
+        .cal-filters .text-btn { grid-column:1 / -1; justify-self:start; }
+        .cal-filters .filter-empty { grid-column:1 / -1; }
+      }
+    }
+
+    /* Mobile: "Limpiar filtros" siempre debajo, para que los filtros no cambien de tamaño ni de forma. */
+    @media (max-width:790px) {
+      .global-filters:not(.cal-filters) { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+      .global-filters:not(.cal-filters) label { flex:none; min-width:0; }
+      .global-filters:not(.cal-filters) label:nth-of-type(3) { grid-column:1 / -1; }
+      .global-filters:not(.cal-filters) .text-btn { grid-column:1 / -1; justify-self:start; }
+    }
+
+    /* Seguimiento en escritorio: avance destacado a todo el ancho y lista paginada debajo. */
+    .pager { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; padding-top:12px; border-top:1px solid rgba(23,40,30,.08); }
+    .pager-info { color:#53675a; font-size:12.5px; }
+    .pager-controls { display:flex; align-items:center; gap:10px; }
+    .pager-page { min-width:92px; text-align:center; color:var(--ink); font-size:13px; font-weight:650; font-variant-numeric:tabular-nums; }
+    @media (min-width:791px) {
+      .progress-layout { grid-template-columns:minmax(0,1fr); gap:12px; }
+      .pager .btn { min-height:32px; padding:4px 12px; font-size:12.5px; }
+      .pager .btn svg { width:14px; height:14px; }
+    }
+    @media (min-width:1000px) {
+      .progress-layout > .progress-panel:first-child { display:grid; grid-template-columns:minmax(260px,340px) minmax(0,1fr); grid-template-rows:auto auto 1fr; column-gap:48px; align-items:start; padding:20px 24px; background:linear-gradient(135deg,#f4f9f2,#fff 55%); }
+      .progress-layout > .progress-panel:first-child > h2 { grid-column:1; grid-row:1; }
+      .progress-layout > .progress-panel:first-child > .panel-desc { grid-column:1; grid-row:2; margin-bottom:8px; }
+      .progress-layout > .progress-panel:first-child > .progress-number { grid-column:1; grid-row:3; align-self:end; margin:0; }
+      .progress-layout > .progress-panel:first-child .progress-number strong { font-size:56px; }
+      .progress-layout > .progress-panel:first-child > .progress-bar { grid-column:2; grid-row:1; align-self:center; height:16px; margin-top:6px; }
+      .progress-layout > .progress-panel:first-child > .legend { grid-column:2; grid-row:2 / span 2; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 28px; padding-top:10px; }
+      .progress-layout > .progress-panel:first-child > .mini-hint { grid-column:1 / -1; grid-row:4; margin-top:10px; padding-top:10px; border-top:1px solid var(--line-soft); }
+      .progress-layout > .progress-panel:last-child .next-list { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px 10px; }
+    }
+
+    /* Mobile: margen de scroll algo mayor sobre la barra inferior, para que el elemento enfocado o desplazado quede claramente libre. */
+    @media (max-width:790px) { html { scroll-padding-bottom:calc(100px + env(safe-area-inset-bottom)); } }
+
+    /* Seguimiento: filtros dentro de Publicaciones, bajo su descripción. */
+    .prog-filters { margin:0 0 12px; padding:9px 12px; border:1px solid var(--line); border-radius:10px; background:var(--paper); }
+    .prog-filters .filter-empty { flex-basis:100%; }
+    @media (min-width:791px) { .prog-filters .dom-select,.prog-filters select { width:160px; } }
+    @media (max-width:790px) { .prog-filters { padding:10px; } }
+
+    /* Clientes y cuentas · Personal: una sola línea de título con separador, igual alto que el resto. */
+    .client-card header > div:first-child:has(.personal-caption) { display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; column-gap:0; }
+    .client-card header > div:first-child:has(.personal-caption) > h2 { grid-column:1; margin:0 0 3px; font-size:17px; }
+    .client-card header .personal-caption { grid-column:2; margin:0 0 3px 12px; padding-left:12px; border-left:1px solid var(--line-strong); font-size:12px; font-weight:600; line-height:1.2; color:var(--primary-dark); }
+    .client-card header > div:first-child:has(.personal-caption) > p:not(.personal-caption) { grid-column:1 / -1; }
+
+    /* ==========================================================================
+       Diseño 2026 · Etapa 3 — modales, bienvenida, ayuda, Mis bonos y avisos.
+       ========================================================================== */
+    .modal-overlay { background:rgba(22,38,28,.42); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); }
+    .modal { box-shadow:var(--shadow-lg); border:1px solid rgba(23,40,30,.06); }
+    .modal-header { background:linear-gradient(180deg,#fbfdfa,#fff); }
+    .modal-footer { background:#fafbf8; }
+    .manager-dialog { border-color:rgba(23,40,30,.06); box-shadow:var(--shadow-lg); }
+    .manager-dialog::backdrop { background:rgba(22,38,28,.42); backdrop-filter:blur(3px); }
+    .toast { border-radius:10px; box-shadow:var(--shadow-lg); }
+    .field input:focus,.field select:focus,.field textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(80,115,92,.16); }
+    .network-chip { transition:background-color .12s var(--ease),border-color .12s var(--ease),box-shadow .12s var(--ease); }
+    .network-chip:hover { border-color:#9db8a2; }
+
+    /* Bienvenida */
+    .entry-screen { background:radial-gradient(60% 50% at 18% 12%,#e9f2e7 0,transparent 70%),radial-gradient(50% 45% at 88% 90%,#e6eff0 0,transparent 70%),var(--bg); }
+    .entry-card { border-color:rgba(23,40,30,.07); box-shadow:var(--shadow-lg); }
+    .entry-brand .brand-mark { box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 14px -4px rgba(59,96,72,.5); }
+    .entry-choice { transition:border-color .14s var(--ease),box-shadow .14s var(--ease),background-color .14s var(--ease); }
+    .entry-choice:hover { border-color:#9db8a2; box-shadow:var(--shadow-sm); }
+    .entry-card .btn-primary { box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 1px 2px rgba(23,40,30,.18),0 3px 8px -2px rgba(59,96,72,.35); }
+
+    /* Ayuda y soporte y Mis bonos: misma elevación y respuesta al cursor que el resto. */
+    .support-card,.policy-links,.support-form-panel { border-color:var(--line); box-shadow:var(--shadow-sm); }
+    .policy-links button { transition:background-color .12s var(--ease),border-color .12s var(--ease); }
+    .policy-links button:hover { background:var(--primary-wash); border-color:#c9d9c9; }
+    .support-commitment { border-left-width:3px; }
+    .bono-card,.bono-idea-card { box-shadow:var(--shadow-sm); transition:box-shadow .14s var(--ease),border-color .14s var(--ease),transform .14s var(--ease); }
+    .bono-card:hover,.bono-idea-card:hover { box-shadow:var(--shadow-md); border-color:#c6d6c6; transform:translateY(-1px); }
+
+    @media (min-width:791px) {
+      /* Modales: más compactos en escritorio (en mobile se conservan los 44px táctiles). */
+      .modal { width:min(100%,560px); border-radius:16px; }
+      .modal-header { padding:14px 18px 12px; }
+      .modal-header h2 { font-size:18px; letter-spacing:-.3px; }
+      .modal-header p { font-size:12.5px; }
+      .modal-header .icon-btn { width:32px; height:32px; }
+      .modal-body,#item-form .modal-body { padding:14px 18px; }
+      .field label,#item-form .field label,#item-form .field-label { font-size:12.5px; }
+      #item-form .field input,#item-form .field select,.field input,.field select { min-height:38px; padding:6px 10px; font-size:14px; }
+      .modal .dom-select-button { min-height:38px; padding-block:6px; font-size:14px; }
+      #item-form .date-clear,.date-clear { min-height:38px; font-size:13px; }
+      .field-help,#item-form .field-help { font-size:12px; }
+      .network-chip { min-height:32px; font-size:13px; }
+      #item-form .field .network-chip input { min-height:0; padding:0; width:16px; height:16px; }
+      .text-expand-btn { width:30px; height:30px; }
+      .modal-footer { padding:10px 18px 12px; }
+      .manager-dialog { width:min(480px,calc(100% - 24px)); border-radius:16px; }
+      .manager-dialog h2 { font-size:18px; }
+      .manager-dialog .modal-body { gap:10px; }
+      .manager-dialog input[type=color] { height:38px; }
+      .toast { font-size:13px; padding:10px 16px; }
+      /* Bienvenida */
+      .entry-card { --entry-pad:clamp(22px,4vw,32px); width:min(100%,540px); }
+      .entry-card h1 { font-size:clamp(24px,3vw,30px); }
+      .entry-card h2 { font-size:17px; }
+      .entry-card p,.entry-card .field label { font-size:14px; }
+      .entry-card .field input { min-height:40px; font-size:14px; }
+      .entry-brand { font-size:16px; }
+      /* Ayuda y soporte */
+      .support-home { margin-left:0; max-width:880px; }
+      .support-intro h2 { font-size:20px; }
+      .support-card h2,.policy-links h2,.support-form-panel h2 { font-size:17px; }
+      .support-card,.policy-links { padding:16px 18px; }
+      .support-card p,.support-intro p,.support-home > p { font-size:14px; }
+      .support-card .btn { min-height:36px; }
+      .policy-links button { min-height:40px; font-size:14px; }
+      .support-form-panel { margin-left:0; max-width:680px; padding:20px; }
+      /* Mis bonos */
+      .bono-card { padding:18px; }
+      .bono-card h2 { font-size:19px; }
+      .bono-idea-card { padding:14px 14px 12px; }
+    }
+
+    /* Marca del menú lateral en una sola línea (el botón de contraer flota sobre el borde, no necesita reserva). */
+    @media (min-width:791px) {
+      .sidebar .brand { padding-right:4px; }
+      .sidebar .brand-name { white-space:nowrap; font-size:14.5px; letter-spacing:-.35px; }
+    }
+
+    /* Marca: el logo oficial ocupa todo el cuadrado verde. */
+    .brand-mark { overflow:hidden; }
+    .brand-mark .brand-logo { display:block; width:100%; height:100%; object-fit:contain; pointer-events:none; user-select:none; }
+
+    /* Inter es algo más ancha que las fuentes del sistema: en teléfonos la descripción del modal
+       baja a 12px (como las ayudas de los campos) para no sumar una línea y quitarle alto al editor. */
+    @media (max-width:530px) {
+      .modal-header p { font-size:12px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .btn:active:not(:disabled) { transform:none; }
+    }
   </style>
 </head>
 <body>
@@ -1394,7 +1971,7 @@
     <aside class="sidebar" aria-label="Navegación principal"><button type="button" class="sidebar-toggle" data-action="toggle-sidebar" aria-label="Contraer menú" title="Contraer menú">‹</button>
       <a class="brand" href="#" data-action="nav" data-page="calendar" aria-label="Ir al calendario de Planifica tus redes">
         <span class="brand-mark" id="desktop-brand-icon"></span>
-        <span><span class="brand-name" style="display:block">Planifica<br>tus Redes</span><span class="brand-tag" style="display:block">Tu contenido, en orden.</span></span>
+        <span><span class="brand-name" style="display:block">Planifica tus redes</span><span class="brand-tag" style="display:block">Tu contenido, en orden.</span></span>
       </a>
       <div class="nav-caption">TU ESPACIO</div>
       <nav id="desktop-nav" class="nav" aria-label="Secciones"></nav>
@@ -1442,6 +2019,11 @@
     let sidebarCollapsed = false;
     try { sidebarCollapsed=localStorage.getItem(SIDEBAR_KEY)==='collapsed'; } catch {}
     let workTab = 'day';
+    const PANEL_KEY = 'planifica-tus-redes-workpanel-v1';
+    let workPanelCollapsed = false;
+    try { workPanelCollapsed=localStorage.getItem(PANEL_KEY)==='collapsed'; } catch {}
+    const PROGRESS_PAGE_SIZE = 10;
+    let progressPage = 1;
     let mobileWorkTab = 'day', mobileReturnFrame = 0;
     const APP_NAME = 'Planifica tus Redes';
     const PLATFORM = { instagram:'Instagram', tiktok:'TikTok', linkedin:'LinkedIn', facebook:'Facebook', youtube:'YouTube', pinterest:'Pinterest', twitter:'X / Twitter', otra:'Otra red' };
@@ -1467,6 +2049,8 @@
       grip:'<circle cx="8" cy="5" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="5" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="8" cy="19" r="1" fill="currentColor" stroke="none"/><circle cx="16" cy="19" r="1" fill="currentColor" stroke="none"/>',
       close:'<path d="M18 6 6 18M6 6l12 12"/>',
       arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',
+      panel:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/>',
+      filter:'<path d="M3 5h18l-7 8v6l-4 2v-8Z"/>',
       layers:'<rect x="3" y="4" width="18" height="5" rx="2"/><rect x="3" y="11" width="18" height="5" rx="2"/><path d="M5 19h14"/>',
       info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
       gift:'<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
@@ -1474,7 +2058,9 @@
       collapse:'<path d="M4 14h6v6M20 10h-6V4M14 10l6.5-6.5M10 14l-6.5 6.5"/>',
       menu:'<circle cx="5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1" fill="currentColor" stroke="none"/>'
     };
-    const icon = (name) => `<svg viewBox="0 0 24 24" aria-hidden="true">${PATHS[name]||PATHS.circle}</svg>`;
+    // Marca oficial (logo.png recortado y optimizado, P blanca sobre transparente): se dibuja sobre el verde de .brand-mark.
+    const LOGO_MARK = "data:image/png;base64,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";
+    const icon = (name) => name==='logo'?`<img class="brand-logo" src="${LOGO_MARK}" alt="" width="128" height="128" decoding="async">`:`<svg viewBox="0 0 24 24" aria-hidden="true">${PATHS[name]||PATHS.circle}</svg>`;
     const $ = id => document.getElementById(id);
     const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     const pad = n => String(n).padStart(2,'0');
@@ -1648,20 +2234,28 @@
     const clientOptions = selected => state.clients.map(c=>`<option value="${escapeHTML(c.id)}" ${c.id===selected?'selected':''}>${escapeHTML(c.name)}</option>`).join('');
     const platformOptions = selected => Object.entries(PLATFORM).map(([id,name])=>`<option value="${id}" ${id===selected?'selected':''}>${name}</option>`).join('');
     let progressStatusFilter='all';
-    function filterBar(){
-      const active=state.clientFilter!=='all'||state.platformFilter!=='all'||(state.page==='progress'&&progressStatusFilter!=='all');
-      const visible=state.items.filter(matches).filter(x=>state.page==='ideas'?!x.date:!!x.date);
-      return `<div class="global-filters" aria-label="Filtros de contenido"><label>Cliente<span class="filter-client-control">${state.clientFilter!=='all'?`<i class="filter-client-dot" style="background:${clientOf({clientId:state.clientFilter}).color}" aria-hidden="true"></i>`:''}<select id="filter-client"><option value="all">Todos</option>${clientOptions(state.clientFilter)}</select></span></label><label>Red social<select id="filter-platform"><option value="all">Todas</option>${platformOptions(state.platformFilter)}</select></label>${state.page==='progress'?`<label>Estado<select id="filter-status">${[['all','Todos los estados'],['planned','Planificadas'],['pending','Por preparar'],['ready','Listas'],['published','Publicadas']].map(([value,label])=>`<option value="${value}" ${progressStatusFilter===value?'selected':''}>${label}</option>`).join('')}</select></label>`:''}${active?'<button class="text-btn" data-action="clear-filters">Limpiar filtros</button>':''}</div>${state.page!=='progress'&&active&&!visible.length?'<p class="filter-empty" role="status">No hay contenido que coincida con estos filtros.</p>':''}`;
+    // Filtro Estado del calendario: sólo de visualización, no se guarda ni afecta métricas, banco ni datos.
+    let calendarStatusFilter='all';
+    const STATUS_GROUPS={planned:['idea','preparation','ready'],pending:['idea','preparation'],ready:['ready'],published:['published']};
+    const calendarStatusMatches = x => calendarStatusFilter==='all'||STATUS_GROUPS[calendarStatusFilter].includes(x.status);
+    function filterBar(inCalendar=false,inProgress=false){
+      if(state.page==='calendar'&&!inCalendar)return '';
+      if(state.page==='progress'&&!inProgress)return '';
+      const active=state.clientFilter!=='all'||state.platformFilter!=='all'||(state.page==='progress'&&progressStatusFilter!=='all')||(inCalendar&&calendarStatusFilter!=='all');
+      const visible=state.items.filter(matches).filter(x=>state.page==='ideas'?!x.date:!!x.date).filter(x=>!inCalendar||calendarStatusMatches(x));
+      const statusOptions=[['all','Todos los estados'],['planned','Planificadas'],['pending','Por preparar'],['ready','Listas'],['published','Publicadas']];
+      const statusField=(id,current)=>`<label>Estado<select id="${id}">${statusOptions.map(([value,label])=>`<option value="${value}" ${current===value?'selected':''}>${label}</option>`).join('')}</select></label>`;
+      return `<div class="global-filters${inCalendar?' cal-filters':''}${inProgress?' prog-filters':''}" aria-label="Filtros de contenido"><label>Cliente<span class="filter-client-control">${state.clientFilter!=='all'?`<i class="filter-client-dot" style="background:${clientOf({clientId:state.clientFilter}).color}" aria-hidden="true"></i>`:''}<select id="filter-client"><option value="all">Todos</option>${clientOptions(state.clientFilter)}</select></span></label><label>Red social<select id="filter-platform"><option value="all">Todas</option>${platformOptions(state.platformFilter)}</select></label>${state.page==='progress'?statusField('filter-status',progressStatusFilter):''}${inCalendar?statusField('filter-cal-status',calendarStatusFilter):''}${active?'<button class="text-btn" data-action="clear-filters">Limpiar filtros</button>':''}</div>${state.page!=='progress'&&active&&!visible.length?'<p class="filter-empty" role="status">No hay contenido que coincida con estos filtros.</p>':''}`;
     }
     const notify = (message, error=false) => { const el=$('toast'); el.innerHTML=`${icon(error?'info':'check')}<span>${escapeHTML(message)}</span>`; el.className=`toast show${error?' error':''}`; el.setAttribute('role',error?'alert':'status'); el.setAttribute('aria-live',error?'assertive':'polite'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='toast',window.innerWidth<=790?2500:3000); };
-    const itemsFor = key => state.items.filter(x=>matches(x)&&x.date===key).sort((a,b)=>Object.keys(STATUS).indexOf(a.status)-Object.keys(STATUS).indexOf(b.status) || a.title.localeCompare(b.title,'es'));
+    const itemsFor = key => state.items.filter(x=>matches(x)&&(state.page!=='calendar'||calendarStatusMatches(x))&&x.date===key).sort((a,b)=>Object.keys(STATUS).indexOf(a.status)-Object.keys(STATUS).indexOf(b.status) || a.title.localeCompare(b.title,'es'));
     const ideas = () => state.items.filter(x=>matches(x)&&!x.date).sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt));
     const posts = () => state.items.filter(x=>matches(x)&&!!x.date);
     const counts = () => { const p=posts(); return {total:p.length,planned:p.filter(x=>x.status==='idea'||x.status==='preparation'||x.status==='ready').length,pending:p.filter(x=>x.status==='idea'||x.status==='preparation').length,ready:p.filter(x=>x.status==='ready').length,published:p.filter(x=>x.status==='published').length,idea:p.filter(x=>x.status==='idea').length,preparation:p.filter(x=>x.status==='preparation').length}; };
     const navHTML = () => NAV.map(([page,label,i])=>`<button type="button" title="${label}" aria-label="${label}" class="nav-btn ${state.page===page?'active':''}" data-action="nav" data-page="${page}" ${state.page===page?'aria-current="page"':''}>${icon(i)}<span>${label}</span>${page==='ideas'&&ideas().length?`<span class="nav-count">${ideas().length}</span>`:''}</button>`).join('');
     function renderMetrics() {
       const c=counts();
-      const cards = [ ['Planificadas',c.planned,'Con fecha asignada','layers'],['Por preparar',c.pending,'Ideas y en preparación','clock'],['Listas',c.ready,'Preparadas para publicar','check'],['Publicadas',c.published,'Ya compartidas','chart'] ];
+      const cards = [ ['Planificadas',c.planned,state.page==='calendar'?'Con fecha asignada (sin publicar)':'Con fecha asignada','layers'],['Por preparar',c.pending,'Ideas y en preparación','clock'],['Listas',c.ready,'Preparadas para publicar','check'],['Publicadas',c.published,'Ya compartidas','chart'] ];
       $('metrics').innerHTML = cards.map(([label,num,detail,ico])=>`<article class="metric"><div class="metric-top"><span class="metric-label">${label}</span><span class="metric-icon">${icon(ico)}</span></div><p class="metric-value">${num}</p><p class="metric-foot">${detail}</p></article>`).join('');
     }
     function renderHeader() {
@@ -1694,7 +2288,8 @@
       document.querySelector('.sidebar-toggle').title=sidebarCollapsed?'Expandir menú':'Contraer menú';
       $('desktop-nav').innerHTML=navHTML(); $('mobile-nav').innerHTML=navHTML().replace('>Clientes y cuentas</span>','>Clientes</span>');
       renderHeader(); renderMetrics();
-      $('metrics').classList.toggle('metric-row--compact',state.page!=='progress');
+      $('metrics').classList.toggle('metric-row--compact',state.page!=='progress'&&state.page!=='calendar');
+      $('metrics').classList.toggle('metric-row--cards',state.page==='calendar'||state.page==='progress');
       $('metrics').hidden=state.page==='clients'||state.page==='help'||state.page==='bonos';
       if(state.page==='help')window.PlanificaCommercial.renderHelp($('page-content'));
       else if(state.page==='bonos'){if(window.PlanificaBonos)window.PlanificaBonos.render($('page-content'));else $('page-content').innerHTML='<section class="surface blank-state" role="alert"><h3>No se pudieron cargar tus bonos</h3><p>Recargá la página para intentarlo nuevamente. Tus datos no se modificaron.</p></section>';}
@@ -1894,7 +2489,7 @@
       const label=state.mode==='month'?monthTitle(state.focusDate):`${ddmm(start)} – ${ddmm(end)}`;
       const ideasList=ideas();
       const railIdeas=ideasList.length?`<div class="rail-idea-list">${ideasList.map(ideaCard).join('')}</div><div class="rail-bottom"><button type="button" class="btn btn-outline" data-action="nav" data-page="ideas">Ver todas las ideas ${icon('arrow')}</button></div>`:`<div class="empty-small"><span class="empty-illustration">${icon('lightbulb')}</span><h3>Tu banco está vacío</h3><p>Una buena publicación puede empezar con una simple idea.</p><button type="button" class="btn btn-muted" data-action="new-idea">${icon('plus')} Nueva idea</button></div>`;
-      return `<div class="board-grid ${state.mode==='week'?'is-week':''}"><section class="surface"><div class="surface-header"><div><h2 class="surface-title">Tu planificación</h2><p class="surface-subtitle">${state.mode==='month'?'Vista general del mes':'Una semana, día por día'}</p></div></div><div class="toolbar" id="calendar-controls"><div class="range-controls"><span class="range-label">${escapeHTML(label)}</span><button class="icon-btn" type="button" data-action="prev" aria-label="Período anterior">${icon('left')}</button><button class="icon-btn" type="button" data-action="next" aria-label="Período siguiente">${icon('right')}</button><button type="button" class="today-btn" data-action="today">Hoy</button></div><div class="view-controls"><div class="segmented" role="group" aria-label="Vista del calendario"><button type="button" data-action="mode" data-mode="month" class="${state.mode==='month'?'active':''}" aria-pressed="${state.mode==='month'}">Mes</button><button type="button" data-action="mode" data-mode="week" class="${state.mode==='week'?'active':''}" aria-pressed="${state.mode==='week'}">Semana</button></div></div></div>${state.mode==='month'?monthCalendar():weekCalendar()}</section><aside class="surface work-panel" aria-label="Panel de trabajo"><div class="work-tabs" role="group" aria-label="Contenido del panel"><button type="button" data-action="work-tab" data-tab="day" class="${workTab==='day'?'active':''}" aria-pressed="${workTab==='day'}">Publicaciones del día</button><button type="button" data-action="work-tab" data-tab="ideas" data-drop-bank="true" title="Banco de ideas: soltá aquí una publicación para quitarle la fecha" class="${workTab==='ideas'?'active':''}" aria-pressed="${workTab==='ideas'}">Banco de ideas</button></div><p class="bank-drop-hint">Soltá en Banco de ideas para quitar la fecha.</p><div class="work-panel-scroll" ${workTab==='ideas'?'data-drop-bank="true"':''}>${workTab==='day'?renderSelectedDay():`<div class="rail-heading"><h2>Banco de ideas</h2><span class="idea-label">${ideasList.length} sin fecha</span></div><p class="rail-desc">Guardá tus ideas y llevalas al calendario cuando estés listo.</p>${railIdeas}`}</div></aside></div>`;
+      return `<div class="board-grid ${state.mode==='week'?'is-week':''} ${workPanelCollapsed?'is-panel-collapsed':''}"><section class="surface"><div class="surface-header"><div><h2 class="surface-title">Tu planificación</h2><p class="surface-subtitle">${state.mode==='month'?'Vista general del mes':'Una semana, día por día'}</p></div></div><div class="toolbar" id="calendar-controls"><div class="range-controls"><span class="range-label">${escapeHTML(label)}</span><button class="icon-btn" type="button" data-action="prev" aria-label="Período anterior">${icon('left')}</button><button class="icon-btn" type="button" data-action="next" aria-label="Período siguiente">${icon('right')}</button><button type="button" class="today-btn" data-action="today">Hoy</button></div><div class="view-controls"><div class="segmented" role="group" aria-label="Vista del calendario"><button type="button" data-action="mode" data-mode="month" class="${state.mode==='month'?'active':''}" aria-pressed="${state.mode==='month'}">Mes</button><button type="button" data-action="mode" data-mode="week" class="${state.mode==='week'?'active':''}" aria-pressed="${state.mode==='week'}">Semana</button></div><button type="button" class="icon-btn panel-toggle" data-action="toggle-work-panel" aria-pressed="${!workPanelCollapsed}" aria-label="${workPanelCollapsed?'Mostrar panel lateral':'Ocultar panel lateral'}" title="${workPanelCollapsed?'Mostrar panel lateral':'Ocultar panel lateral'}">${icon('panel')}</button></div></div>${filterBar(true)}${state.mode==='month'?monthCalendar():weekCalendar()}</section><aside class="surface work-panel" aria-label="Panel de trabajo"><div class="work-tabs" role="group" aria-label="Contenido del panel"><button type="button" data-action="work-tab" data-tab="day" class="${workTab==='day'?'active':''}" aria-pressed="${workTab==='day'}">Publicaciones del día</button><button type="button" data-action="work-tab" data-tab="ideas" data-drop-bank="true" title="Banco de ideas: soltá aquí una publicación para quitarle la fecha" class="${workTab==='ideas'?'active':''}" aria-pressed="${workTab==='ideas'}">Banco de ideas</button></div><p class="bank-drop-hint">Soltá en Banco de ideas para quitar la fecha.</p><div class="work-panel-scroll" ${workTab==='ideas'?'data-drop-bank="true"':''}>${workTab==='day'?renderSelectedDay():`<div class="rail-heading"><h2>Banco de ideas</h2><span class="idea-label">${ideasList.length} sin fecha</span></div><p class="rail-desc">Guardá tus ideas y llevalas al calendario cuando estés listo.</p>${railIdeas}`}</div></aside></div>`;
     }
     function ideaCard(x) {
       const caption=x.caption.trim();
@@ -1907,8 +2502,13 @@
     function renderProgress() {
       const c=counts(); const pct=c.total?Math.round(c.published/c.total*100):0;
       const upcoming=posts().filter(x=>progressStatusFilter==='all'||(progressStatusFilter==='planned'?(x.status==='idea'||x.status==='preparation'||x.status==='ready'):progressStatusFilter==='pending'?(x.status==='idea'||x.status==='preparation'):x.status===progressStatusFilter)).sort((a,b)=>a.date.localeCompare(b.date));
+      const paged=window.innerWidth>790&&upcoming.length>PROGRESS_PAGE_SIZE;
+      const totalPages=paged?Math.ceil(upcoming.length/PROGRESS_PAGE_SIZE):1;
+      progressPage=Math.min(Math.max(1,progressPage),totalPages);
+      const visibleUpcoming=paged?upcoming.slice((progressPage-1)*PROGRESS_PAGE_SIZE,progressPage*PROGRESS_PAGE_SIZE):upcoming;
+      const pagerHTML=paged?`<nav class="pager" aria-label="Paginación de publicaciones"><span class="pager-info">Mostrando ${(progressPage-1)*PROGRESS_PAGE_SIZE+1}–${Math.min(progressPage*PROGRESS_PAGE_SIZE,upcoming.length)} de ${upcoming.length}</span><div class="pager-controls"><button type="button" class="btn btn-outline" data-action="progress-page" data-dir="prev" ${progressPage<=1?'disabled':''}>${icon('left')} Anterior</button><span class="pager-page" aria-current="page">Página ${progressPage} de ${totalPages}</span><button type="button" class="btn btn-outline" data-action="progress-page" data-dir="next" ${progressPage>=totalPages?'disabled':''}>Siguiente ${icon('right')}</button></div></nav>`:'';
       const ratios = [['published',c.published],['ready',c.ready],['preparation',c.preparation],['idea',c.idea]];
-      return `<div class="progress-layout"><section class="surface progress-panel"><h2>Avance de tu contenido</h2><p class="panel-desc">Distribución y progreso de todas tus publicaciones con fecha, incluidas las realizadas.</p><div class="progress-number"><strong>${pct}%</strong><span>de publicaciones realizadas</span></div><div class="progress-bar" role="progressbar" aria-label="Publicaciones realizadas" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">${c.total?ratios.map(([s,n])=>`<span class="part-${s}" style="width:${n*100/c.total}%"></span>`).join(''):''}</div><div class="legend">${[['idea','Ideas por preparar',c.idea],['preparation','En preparación',c.preparation],['ready','Listas para publicar',c.ready],['published','Publicadas',c.published]].map(([s,t,n])=>`<div class="legend-row"><span class="legend-dot ${s}"></span><span>${t}</span><strong>${n}</strong></div>`).join('')}</div><p class="mini-hint">Las ${ideas().length} ${ideas().length===1?'idea sin fecha está':'ideas sin fecha están'} en el banco, fuera de este cálculo.</p></section><section class="surface progress-panel"><h2>Publicaciones</h2><p class="panel-desc">Contenido con fecha de publicación asignada.</p>${upcoming.length?`<div class="next-list">${upcoming.map(x=>`<article class="next-item"><div class="date-badge"><strong>${parseDate(x.date).getDate()}</strong><span>${escapeHTML(monShort(x.date))}</span></div><div class="post-info"><h3 class="post-title">${escapeHTML(x.title)}</h3>${clientBadge(x)}<div class="post-meta">${networksMeta(x)}<span>${escapeHTML(STATUS[x.status])}</span></div></div><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></article>`).join('')}</div>`:`<div class="empty-small"><span class="empty-illustration">${icon('calendar')}</span><p>No hay publicaciones que coincidan con los filtros seleccionados.</p><button type="button" class="btn btn-muted" data-action="nav" data-page="calendar">Ir al calendario ${icon('arrow')}</button></div>`}</section></div>`;
+      return `<div class="progress-layout"><section class="surface progress-panel"><h2>Avance de tu contenido</h2><p class="panel-desc">Distribución y progreso de todas tus publicaciones con fecha, incluidas las realizadas.</p><div class="progress-number"><strong>${pct}%</strong><span>de publicaciones realizadas</span></div><div class="progress-bar" role="progressbar" aria-label="Publicaciones realizadas" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">${c.total?ratios.map(([s,n])=>`<span class="part-${s}" style="width:${n*100/c.total}%"></span>`).join(''):''}</div><div class="legend">${[['idea','Ideas por preparar',c.idea],['preparation','En preparación',c.preparation],['ready','Listas para publicar',c.ready],['published','Publicadas',c.published]].map(([s,t,n])=>`<div class="legend-row"><span class="legend-dot ${s}"></span><span>${t}</span><strong>${n}</strong></div>`).join('')}</div><p class="mini-hint">Las ${ideas().length} ${ideas().length===1?'idea sin fecha está':'ideas sin fecha están'} en el banco, fuera de este cálculo.</p></section><section class="surface progress-panel"><h2>Publicaciones</h2><p class="panel-desc">Contenido con fecha de publicación asignada.</p>${filterBar(false,true)}${upcoming.length?`<div class="next-list">${visibleUpcoming.map(x=>`<article class="next-item"><div class="date-badge"><strong>${parseDate(x.date).getDate()}</strong><span>${escapeHTML(monShort(x.date))}</span></div><div class="post-info"><h3 class="post-title">${escapeHTML(x.title)}</h3>${clientBadge(x)}<div class="post-meta">${networksMeta(x)}<span>${escapeHTML(STATUS[x.status])}</span></div></div><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></article>`).join('')}</div>${pagerHTML}`:`<div class="empty-small"><span class="empty-illustration">${icon('calendar')}</span><p>No hay publicaciones que coincidan con los filtros seleccionados.</p><button type="button" class="btn btn-muted" data-action="nav" data-page="calendar">Ir al calendario ${icon('arrow')}</button></div>`}</section></div>`;
     }
 
     function arrangeClientColumns(){
@@ -2243,10 +2843,12 @@
       if(a==='mobile-move'){openMobileMove(btn.dataset.id);return;}
       if(a==='back-calendar'){const controls=$('calendar-controls');controls?.querySelector('button')?.focus({preventScroll:true});controls?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});return;}
       if(a.startsWith('client-')||a.startsWith('account-')){manageAction(a,btn.dataset.id);return;}
-      if(a==='clear-filters'){if(state.page==='progress')progressStatusFilter='all';commit(()=>{state.clientFilter='all';state.platformFilter='all';});return;}
+      if(a==='clear-filters'){progressPage=1;if(state.page==='progress')progressStatusFilter='all';calendarStatusFilter='all';commit(()=>{state.clientFilter='all';state.platformFilter='all';});return;}
       if(a==='nav')navigate(btn.dataset.page);
       else if(a==='toggle-sidebar'){sidebarCollapsed=!sidebarCollapsed;try{localStorage.setItem(SIDEBAR_KEY,sidebarCollapsed?'collapsed':'expanded');}catch{} render();}
       else if(a==='toggle-sidebar-backups'){const pop=$('sidebar-backup-pop');const open=pop.classList.toggle('open');btn.setAttribute('aria-expanded',String(open));}
+      else if(a==='toggle-work-panel'){workPanelCollapsed=!workPanelCollapsed;try{localStorage.setItem(PANEL_KEY,workPanelCollapsed?'collapsed':'expanded');}catch{} render();}
+      else if(a==='progress-page'){progressPage=Math.max(1,progressPage+(btn.dataset.dir==='next'?1:-1));render();}
       else if(a==='work-tab'){workTab=btn.dataset.tab;render();}
       else if(a==='new-post')openModal({date:state.page==='calendar'?state.selectedDate:today()});
       else if(a==='new-idea')openModal({idea:true});
@@ -2362,7 +2964,7 @@
       fitModal();
     }
     $('item-client').addEventListener('change',changeItemClient);
-    document.addEventListener('change',e=>{if(e.target.id==='filter-status'){progressStatusFilter=e.target.value;render();return;}if(e.target.id==='filter-client'||e.target.id==='filter-platform'){const field=e.target.id==='filter-client'?'clientFilter':'platformFilter';commit(()=>{state[field]=e.target.value;});}});
+    document.addEventListener('change',e=>{if(e.target.id==='filter-status'){progressStatusFilter=e.target.value;progressPage=1;render();return;}if(e.target.id==='filter-cal-status'){calendarStatusFilter=e.target.value;render();return;}if(e.target.id==='filter-client'||e.target.id==='filter-platform'){const field=e.target.id==='filter-client'?'clientFilter':'platformFilter';progressPage=1;commit(()=>{state[field]=e.target.value;});}});
     // Mis bonos reuses the existing data model, commit/save, dialogs and notifications.
     window.PlanificaBonos?.init({state,commit,manager,notify,render,navigate,icon,platformIcon,PLATFORM,TYPES,STATUS,PERSONAL,uid,cleanItem,validDate,dateKey,parseDate,today,startWeek,accountLabel:compactAccountLabel,focusTarget,restoreFocus});
     formSelectValues();render();startEntry();

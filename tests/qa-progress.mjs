@@ -12,9 +12,9 @@ const server=createServer(async(req,res)=>{
   if(req.method==='POST'){let body='';for await(const chunk of req)body+=chunk;posts.push(body);res.writeHead(200);res.end('local response');return;}
   const pathname=new URL(req.url,'http://localhost').pathname;
   const file=pathname==='/'?'index.html':pathname.slice(1);
-  if(!['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg'].includes(file)){res.writeHead(404);res.end();return;}
+  if(!['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg','fonts/inter-latin-wght.woff2'].includes(file)){res.writeHead(404);res.end();return;}
   const body=await readFile(join(root,file));
-  res.writeHead(200,{'Content-Type':file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':'text/html; charset=utf-8','Content-Security-Policy':csp});res.end(body);
+  res.writeHead(200,{'Content-Type':file.endsWith('.js')?'text/javascript':file.endsWith('.css')?'text/css':file.endsWith('.svg')?'image/svg+xml':file.endsWith('.woff2')?'font/woff2':'text/html; charset=utf-8','Content-Security-Policy':csp});res.end(body);
 });
 await new Promise(ok=>server.listen(0,'127.0.0.1',ok));
 const url=`http://127.0.0.1:${server.address().port}/`;
@@ -63,7 +63,7 @@ try{
   for(const status of ['all','planned','pending','ready','published']){
    const beforeStorage=await evaluate('JSON.stringify(localStorage)');await choose('filter-status',status);if(beforeStorage!==await evaluate('JSON.stringify(localStorage)'))throw Error('Status changed storage');
    const expected=['a','b'].filter(c=>client==='all'||c===client).flatMap(c=>['instagram','linkedin'].filter(p=>platform==='all'||p===platform).flatMap(p=>['idea','preparation','ready','published'].filter(s=>status==='all'||(status==='planned'?['idea','preparation','ready'].includes(s):status==='pending'?['idea','preparation'].includes(s):status===s)).map(s=>c+p+s))).sort();
-   const actual=await evaluate(`[...document.querySelectorAll('.next-item .post-title')].map(e=>e.textContent).sort()`);
+   const actual=(await evaluate(`(()=>{const out=[],q=s=>document.querySelector(s),take=()=>out.push(...[...document.querySelectorAll('.next-item .post-title')].map(e=>e.textContent)),go=d=>{while(q('[data-dir='+d+']')&&!q('[data-dir='+d+']').disabled)q('[data-dir='+d+']').click()};go('prev');take();while(q('[data-dir=next]')&&!q('[data-dir=next]').disabled){q('[data-dir=next]').click();take()}go('prev');return out})()`)).sort();
    if(JSON.stringify(expected)!==JSON.stringify(actual))throw Error(JSON.stringify({expected,actual}));
    if(summary!==await evaluate(`document.querySelector('#metrics').innerHTML+document.querySelector('.progress-panel').innerHTML`))throw Error('Summary changed');
    await check('Chronological dates',`(()=>{const d=[...document.querySelectorAll('.date-badge strong')].map(e=>+e.textContent);return d.every((v,i)=>!i||v>=d[i-1]);})()`);
@@ -72,7 +72,7 @@ try{
  await choose('filter-platform','youtube');
  await check('Empty message',`document.querySelector('.progress-panel:last-child .empty-small').textContent.includes('No hay publicaciones que coincidan con los filtros seleccionados.')`);
  await click('[data-action=clear-filters]');
- await check('Clear filters',`document.querySelector('#filter-status').value==='all'&&document.querySelectorAll('.next-item').length===16`);
+ await check('Clear filters',`document.querySelector('#filter-status').value==='all'&&(()=>{const out=[],q=s=>document.querySelector(s),take=()=>out.push(...[...document.querySelectorAll('.next-item .post-title')].map(e=>e.textContent)),go=d=>{while(q('[data-dir='+d+']')&&!q('[data-dir='+d+']').disabled)q('[data-dir='+d+']').click()};go('prev');take();while(q('[data-dir=next]')&&!q('[data-dir=next]').disabled){q('[data-dir=next]').click();take()}go('prev');return out})().length===16`);
  for(const width of [1440,393,320]){
   await metrics(width,900,width<500);await choose('filter-status','planned');await choose('filter-status','all');
   await click('#filter-status-combobox');

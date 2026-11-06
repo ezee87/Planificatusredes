@@ -34,5 +34,6 @@ const vercel=JSON.parse(await readFile(join(root,'vercel.json'),'utf8'));
 vercel.headers=[{source:'/(.*)',headers:vercelHeaders}];
 await writeFile(join(root,'vercel.json'),JSON.stringify(vercel,null,2)+'\n');
 await mkdir(join(root,'dist','legal'),{recursive:true});
-for(const file of ['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg','legal/index.html','_headers','_redirects'])await copyFile(join(root,file),join(root,'dist',file));
+await mkdir(join(root,'dist','fonts'),{recursive:true});
+for(const file of ['index.html','commercial.js','commercial.css','custom-selects.js','custom-selects.css','bonos-data.js','bonos.js','bonos.css','favicon.svg','apple-touch-icon.png','fonts/inter-latin-wght.woff2','legal/index.html','_headers','_redirects'])await copyFile(join(root,file),join(root,'dist',file));
 console.log('dist preparado; CSP con '+hashes.size+' hashes. Sin publicación.');
