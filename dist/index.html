@@ -1960,6 +1960,7 @@
     @media (max-width:530px) {
       .modal-header p { font-size:12px; }
     }
+    .post-card .post-actions:has([data-action="view-content"]) { flex-wrap:wrap; max-width:100%; }
     @media (prefers-reduced-motion:reduce) {
       .btn:active:not(:disabled) { transform:none; }
     }
@@ -1975,14 +1976,15 @@
       </a>
       <div class="nav-caption">TU ESPACIO</div>
       <nav id="desktop-nav" class="nav" aria-label="Secciones"></nav>
-      <div class="sidebar-bottom"><button type="button" class="nav-btn commercial-help-button" data-action="help" title="Ayuda y soporte" aria-label="Ayuda y soporte"><span class="commercial-help-icon" aria-hidden="true"></span><span>Ayuda y soporte</span></button><button type="button" class="backup-compact" data-action="toggle-sidebar-backups" title="Mis respaldos" aria-label="Mis respaldos" aria-expanded="false"><span aria-hidden="true">⇩</span></button><div class="sidebar-backup-pop" id="sidebar-backup-pop"><button type="button" data-action="export">Exportar respaldo</button><button type="button" data-action="import">Importar respaldo</button></div>
+      <div class="sidebar-bottom"><button type="button" class="nav-btn commercial-help-button" data-action="help" title="Ayuda y soporte" aria-label="Ayuda y soporte"><span class="commercial-help-icon" aria-hidden="true"></span><span>Ayuda y soporte</span></button><button type="button" class="backup-compact" data-action="toggle-sidebar-backups" title="Mis respaldos" aria-label="Mis respaldos" aria-expanded="false"><span aria-hidden="true">⇩</span></button><div class="sidebar-backup-pop" id="sidebar-backup-pop"><button type="button" data-action="export">Exportar respaldo</button><button type="button" data-action="export-posts">Exportar publicaciones</button><button type="button" data-action="import">Importar respaldo</button></div>
         <button type="button" class="backup-btn" data-action="export"><span id="download-icon"></span>Exportar respaldo</button>
+        <button type="button" class="backup-btn" data-action="export-posts"><span class="posts-download-icon"></span>Exportar publicaciones</button>
         <button type="button" class="backup-btn" data-action="import"><span id="upload-icon"></span>Importar respaldo</button>
       </div>
     </aside>
     <main class="main">
       <div class="main-inner">
-        <div class="mobile-brand"><a class="brand" href="#" data-action="nav" data-page="calendar"><span class="brand-mark" id="mobile-brand-icon"></span><span><span class="brand-name" style="display:block">Planifica tus redes</span><span class="brand-tag" style="display:block">Tu contenido, en orden.</span></span></a><button type="button" class="mobile-backup mobile-help" data-action="help" aria-label="Ayuda y soporte" title="Ayuda y soporte"><span class="mobile-help-icon"></span></button><button type="button" class="mobile-backup" data-action="backups" aria-label="Opciones de respaldo" title="Opciones de respaldo" id="mobile-backup-icon" aria-expanded="false"></button><div class="mobile-backup-menu" id="mobile-backup-menu"><h3>Mis respaldos</h3><button type="button" data-action="export"><span id="mobile-download"></span>Exportar respaldo</button><button type="button" data-action="import"><span id="mobile-upload"></span>Importar respaldo</button></div></div>
+        <div class="mobile-brand"><a class="brand" href="#" data-action="nav" data-page="calendar"><span class="brand-mark" id="mobile-brand-icon"></span><span><span class="brand-name" style="display:block">Planifica tus redes</span><span class="brand-tag" style="display:block">Tu contenido, en orden.</span></span></a><button type="button" class="mobile-backup mobile-help" data-action="help" aria-label="Ayuda y soporte" title="Ayuda y soporte"><span class="mobile-help-icon"></span></button><button type="button" class="mobile-backup" data-action="backups" aria-label="Opciones de respaldo" title="Opciones de respaldo" id="mobile-backup-icon" aria-expanded="false"></button><div class="mobile-backup-menu" id="mobile-backup-menu"><h3>Mis respaldos</h3><button type="button" data-action="export"><span id="mobile-download"></span>Exportar respaldo</button><button type="button" data-action="export-posts"><span class="posts-download-icon"></span>Exportar publicaciones</button><button type="button" data-action="import"><span id="mobile-upload"></span>Importar respaldo</button></div></div>
         <header id="page-header" class="page-header"></header>
         <section id="metrics" class="metric-row" aria-label="Resumen de publicaciones"></section>
         <div id="page-content"></div>
@@ -1991,13 +1993,14 @@
     </main>
   </div>
   <nav id="mobile-nav" class="mobile-nav" aria-label="Navegación móvil"></nav>
-  <div id="modal-overlay" class="modal-overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description"><div class="modal-header"><div><h2 id="modal-title"></h2><p id="modal-description"></p></div><button type="button" class="icon-btn" data-action="close-modal" aria-label="Cerrar ventana" id="modal-close-icon"></button></div><form id="item-form" novalidate><div class="modal-body"><div class="form-grid">
+  <div id="modal-overlay" class="modal-overlay" role="presentation"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description"><div class="modal-header"><div><h2 id="modal-title"></h2><p id="modal-description"></p></div><div class="post-actions"><span id="modal-content-link"></span><button type="button" class="icon-btn" data-action="close-modal" aria-label="Cerrar ventana" id="modal-close-icon"></button></div></div><form id="item-form" novalidate><div class="modal-body"><div class="form-grid">
     <div class="field full"><label for="item-title">Título o tema *</label><input id="item-title" name="title" type="text" maxlength="120" placeholder="Ej.: 5 consejos para empezar" autocomplete="off" required></div>
     <div class="field"><label for="item-client">Cliente</label><select id="item-client"></select></div>
     <div class="field"><label for="item-type">Tipo de contenido</label><select id="item-type" name="type"></select></div>
     <div class="field full" id="item-networks-field"><span class="field-label" id="item-networks-label">Redes sociales *</span><div id="item-networks" role="group" aria-labelledby="item-networks-label" aria-describedby="account-hint"></div><p class="field-help" id="account-hint"></p></div>
     <div class="field"><label for="item-date">Fecha de publicación</label><div class="date-inline"><input id="item-date" name="date" type="date"><button type="button" class="date-clear" data-action="clear-date">Sin fecha</button></div><p class="field-help">Sin fecha, se guarda en el banco de ideas.</p></div>
     <div class="field"><label for="item-status">Estado</label><select id="item-status" name="status"></select><p class="field-help" id="status-hint">Elegí en qué etapa está tu contenido.</p></div>    <div class="field full" id="item-text-field"><div class="field-label-row"><label for="item-text">Texto de la publicación</label><button type="button" class="text-expand-btn" id="item-text-expand" data-action="toggle-text-editor" aria-controls="item-text" aria-pressed="false" aria-label="Ampliar el editor de texto" title="Ampliar editor"></button></div><textarea id="item-text" name="caption" maxlength="20000" placeholder="Escribí el texto, guion o notas de tu publicación..."></textarea></div>
+    <div class="field full"><label for="item-content-url">Enlace al contenido</label><input id="item-content-url" name="contentUrl" type="url" placeholder="https://drive.google.com/..." aria-describedby="item-content-url-help"><p class="field-help" id="item-content-url-help">Opcional. Enlace al material de la publicación.</p></div>
   </div></div><div class="modal-footer"><button type="button" class="btn btn-danger delete-action" id="modal-delete" data-action="delete-item" hidden>Eliminar</button><button type="button" class="btn btn-outline" data-action="close-modal">Cancelar</button><button type="submit" class="btn btn-primary" id="modal-submit">Guardar</button></div></form></div></div>
   <dialog id="manager-dialog" class="manager-dialog" aria-labelledby="manager-title"></dialog>
   <div id="calendar-tooltip" class="calendar-tooltip" role="tooltip" hidden></div>
@@ -2041,6 +2044,7 @@
       right:'<path d="m9 18 6-6-6-6"/>',
       download:'<path d="M12 3v12m-4-4 4 4 4-4M4 17v4h16v-4"/>',
       upload:'<path d="M12 16V4m-4 4 4-4 4 4M4 17v4h16v-4"/>',
+      external:'<path d="M14 3h7v7M21 3l-10 10M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/>',
       shield:'<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
       check:'<path d="m5 12 5 5L20 7"/>',
       clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
@@ -2076,6 +2080,11 @@
     const ddmm = key => new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'short'}).format(parseDate(key));
     const validDate = key => { if (typeof key!=='string' || !/^\d{4}-\d{2}-\d{2}$/.test(key)) return false; const [y,m,d]=key.split('-').map(Number); const v = new Date(y,m-1,d); return v.getFullYear()===y && v.getMonth()===m-1 && v.getDate()===d; };
     const uid = () => typeof crypto!=='undefined' && crypto.randomUUID ? crypto.randomUUID() : `id-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const validContentUrl = value => {
+      if(typeof value!=='string'||!value.trim())return false;
+      try { return ['https:','http:'].includes(new URL(value).protocol); } catch { return false; }
+    };
+    const contentLink = item => validContentUrl(item?.contentUrl)?`<a class="subtle-icon" data-action="view-content" href="${escapeHTML(item.contentUrl)}" target="_blank" rel="noopener noreferrer" title="Ver contenido" aria-label="Ver contenido">${icon('external')}</a>`:'';
     // A content item keeps one identity and may target several networks: each one is a platform,
     // optionally tied to an account of the item's client. platform/accountId mirror the first
     // network so single-network readers (Mis bonos, older backups) keep working unchanged.
@@ -2094,13 +2103,14 @@
       if (!x || typeof x!=='object' || Array.isArray(x) || typeof x.title!=='string' || !x.title.trim()) return null;
       if (x.date !== null && x.date !== undefined && x.date!=='' && !validDate(x.date)) return null;
       if (x.importId!==undefined && (typeof x.importId!=='string' || !x.importId || x.importId.length>=180)) return null;
+      if (x.contentUrl!==undefined && x.contentUrl!=='' && !validContentUrl(x.contentUrl)) return null;
       let networks;
       if (x.networks!==undefined) {
         if (!Array.isArray(x.networks) || !x.networks.length || x.networks.length>MAX_NETWORKS || x.networks.some(n=>!n || typeof n!=='object' || Array.isArray(n) || !Object.hasOwn(PLATFORM,n.platform) || (n.accountId!==null && n.accountId!==undefined && (typeof n.accountId!=='string' || !n.accountId || n.accountId.length>=180)))) return null;
         networks = x.networks;
       } else networks = [{platform:Object.hasOwn(PLATFORM,x.platform)?x.platform:'instagram',accountId:x.accountId}];
       const date = x.date || null;
-      return withNetworks({ id:typeof x.id==='string' && x.id.length < 180 && x.id ? x.id : uid(), title:x.title, caption:typeof x.caption==='string' ? x.caption : '', type:Object.hasOwn(TYPES,x.type)?x.type:'post', status:Object.hasOwn(STATUS,x.status)?x.status:'idea', date, clientId:x.clientId, ...(x.importId===undefined?{}:{importId:x.importId}), createdAt:typeof x.createdAt==='string'?x.createdAt:new Date().toISOString(), updatedAt:typeof x.updatedAt==='string'?x.updatedAt:new Date().toISOString() }, networks);
+      return withNetworks({ id:typeof x.id==='string' && x.id.length < 180 && x.id ? x.id : uid(), title:x.title, caption:typeof x.caption==='string' ? x.caption : '', type:Object.hasOwn(TYPES,x.type)?x.type:'post', status:Object.hasOwn(STATUS,x.status)?x.status:'idea', date, clientId:x.clientId, ...(x.importId===undefined?{}:{importId:x.importId}), ...(x.contentUrl?{contentUrl:x.contentUrl}:{}), createdAt:typeof x.createdAt==='string'?x.createdAt:new Date().toISOString(), updatedAt:typeof x.updatedAt==='string'?x.updatedAt:new Date().toISOString() }, networks);
     };
     const DATA_KEY = 'planifica-tus-redes-v2';
     const PERSONAL = 'personal';
@@ -2300,7 +2310,7 @@
       requestAnimationFrame(updateMobileReturn);
     }
     const modalStatus = status => `<span class="status-pill ${status==='idea'?'':status}">${escapeHTML(STATUS[status])}</span>`;
-    function postCard(item,options={}) { return `<article class="post-card">${platformBadge(item)}<div class="post-info"><h4 class="post-title">${escapeHTML(item.title)}</h4>${clientBadge(item)}<div class="post-meta">${networksMeta(item)}<span>${escapeHTML(TYPES[item.type])}</span></div></div>${modalStatus(item.status)}<div class="post-actions">${options.mobileWeek?`<button type="button" class="subtle-icon" data-action="mobile-move" data-id="${escapeHTML(item.id)}" title="Mover a otro día" aria-label="Mover fecha de ${escapeHTML(item.title)}">${icon('calendar')}</button>`:`<button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(item.id)}" title="Arrastrar a otra fecha" aria-label="Mover ${escapeHTML(item.title)} arrastrando">${icon('grip')}</button>`}<button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(item.id)}" title="Editar" aria-label="Editar ${escapeHTML(item.title)}">${icon('edit')}</button></div></article>`; }
+    function postCard(item,options={}) { return `<article class="post-card">${platformBadge(item)}<div class="post-info"><h4 class="post-title">${escapeHTML(item.title)}</h4>${clientBadge(item)}<div class="post-meta">${networksMeta(item)}<span>${escapeHTML(TYPES[item.type])}</span></div></div>${modalStatus(item.status)}<div class="post-actions">${contentLink(item)}${options.mobileWeek?`<button type="button" class="subtle-icon" data-action="mobile-move" data-id="${escapeHTML(item.id)}" title="Mover a otro día" aria-label="Mover fecha de ${escapeHTML(item.title)}">${icon('calendar')}</button>`:`<button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(item.id)}" title="Arrastrar a otra fecha" aria-label="Mover ${escapeHTML(item.title)} arrastrando">${icon('grip')}</button>`}<button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(item.id)}" title="Editar" aria-label="Editar ${escapeHTML(item.title)}">${icon('edit')}</button></div></article>`; }
     const planningDate = () => validDate(state.selectedDate)?state.selectedDate:today();
     const planningDateLabel = key => new Intl.DateTimeFormat('es-ES',{day:'numeric',month:'long',...(parseDate(key).getFullYear()!==new Date().getFullYear()?{year:'numeric'}:{})}).format(parseDate(key));
     const mobilePlanningDateLabel = key => titleCaseFirst(new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(parseDate(key)));
@@ -2493,7 +2503,7 @@
     }
     function ideaCard(x) {
       const caption=x.caption.trim();
-      return `<article class="idea-card"><div class="idea-card-top"><span class="idea-label">${escapeHTML(platformNames(x))} · ${escapeHTML(TYPES[x.type])}</span><button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(x.id)}" aria-label="Arrastrar idea al calendario" title="Arrastrar idea al calendario">${icon('grip')}</button></div><h3>${escapeHTML(x.title)}</h3>${clientBadge(x)}<p>${caption?escapeHTML(caption):'Idea sin texto todavía'}</p><div class="idea-card-bottom"><button type="button" class="text-btn" data-action="plan" data-id="${escapeHTML(x.id)}">Planificar ${icon('arrow')}</button><button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" title="Editar idea" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></div></article>`;
+      return `<article class="idea-card"><div class="idea-card-top"><span class="idea-label">${escapeHTML(platformNames(x))} · ${escapeHTML(TYPES[x.type])}</span><button type="button" class="subtle-icon drag-handle" data-drag-id="${escapeHTML(x.id)}" aria-label="Arrastrar idea al calendario" title="Arrastrar idea al calendario">${icon('grip')}</button></div><h3>${escapeHTML(x.title)}</h3>${clientBadge(x)}<p>${caption?escapeHTML(caption):'Idea sin texto todavía'}</p><div class="idea-card-bottom"><button type="button" class="text-btn" data-action="plan" data-id="${escapeHTML(x.id)}">Planificar ${icon('arrow')}</button><div class="post-actions">${contentLink(x)}<button type="button" class="subtle-icon" data-action="edit" data-id="${escapeHTML(x.id)}" title="Editar idea" aria-label="Editar ${escapeHTML(x.title)}">${icon('edit')}</button></div></div></article>`;
     }
     function renderIdeas() {
       const list=ideas();
@@ -2657,6 +2667,9 @@
       renderNetworkPicker(item?networksOf(item):defaultNetworks($('item-client').value,[state.platformFilter==='all'?'instagram':state.platformFilter]));
       $('item-type').value=item?.type||(idea?'post':'reel');
       $('item-text').value=item?.caption||'';
+      $('item-content-url').value=item?.contentUrl||'';
+      $('modal-content-link').innerHTML=contentLink(item);
+      $('item-content-url').removeAttribute('aria-invalid');
       $('item-date').value=date!==undefined?date:(item ? (item.date || '') : (idea?'':state.selectedDate));
       $('item-status').value=item?.status||'idea';
       updateDateState();
@@ -2675,8 +2688,11 @@
       if(date&&!validDate(date)){ $('item-date').setAttribute('aria-invalid','true'); notify('Elegí una fecha válida.',true); $('item-date').focus(); return; }
       const networks=selectedNetworks();
       if(!networks.length){ notify('Elegí al menos una red social.',true); $('item-networks').querySelector('input')?.focus(); return; }
+      const contentUrl=$('item-content-url').value.trim();
+      if(contentUrl&&(!$('item-content-url').checkValidity()||!validContentUrl(contentUrl))){$('item-content-url').setAttribute('aria-invalid','true');notify('Ingresá un enlace web válido que empiece con https:// o http://.',true);$('item-content-url').focus();return;}
       const original=state.editingId?state.items.find(x=>x.id===state.editingId):null;
       const item=withNetworks({...original,clientId:$('item-client').value,id:original?.id||uid(),title:title.slice(0,120),type:$('item-type').value,caption:$('item-text').value.slice(0,20000),date,status:$('item-status').value,createdAt:original?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()},networks);
+      if(contentUrl)item.contentUrl=contentUrl;else delete item.contentUrl;
       if(!cleanItem(item)) { notify('No se pudo validar el contenido.',true);return; }
       const before=[...state.items];
       if(original) state.items=state.items.map(x=>x.id===original.id?item:x); else state.items.push(item);
@@ -2701,6 +2717,36 @@
       const a=document.createElement('a');a.href=url;a.download=`planifica-tus-redes-respaldo-${today()}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
       notify('Respaldo exportado correctamente.');
     }
+    function openPostsExport(){
+      if(storageError){notify('No se pudo leer el almacenamiento original. No se exportarán publicaciones.',true);return;}
+      const preferred=state.clientFilter==='all'?PERSONAL:state.clientFilter;
+      // The existing partial importer targets one client, so each file must do the same.
+      manager('Exportar publicaciones',`<div class="field"><label for="export-client">Cliente</label><select id="export-client" name="client">${clientOptions(preferred)}</select><p class="field-help">Incluye todas sus publicaciones e ideas, con todas las fechas, redes y estados. Al importar, elegí el cliente de destino y configurá las mismas cuentas.</p></div>`,data=>exportPosts(data.get('client')),'Exportar publicaciones');
+    }
+    function exportPosts(clientId){
+      const client=state.clients.find(c=>c.id===clientId);
+      if(!client)return false;
+      const items=state.items.filter(x=>x.clientId===clientId).map(x=>({
+        importId:x.importId||x.id,title:x.title,caption:x.caption,
+        networks:networksOf(x).map(n=>{
+          const account=state.accounts.find(a=>a.id===n.accountId&&a.clientId===clientId);
+          return account?{platform:n.platform,username:account.username}:n.platform;
+        }),
+        type:x.type,status:x.status,date:x.date,...(x.contentUrl?{contentUrl:x.contentUrl}:{})
+      }));
+      if(!items.length){notify('Este cliente no tiene publicaciones ni ideas para exportar.',true);return false;}
+      const exported={format:POSTS_FORMAT,version:POSTS_VERSION,items};
+      // Reuse the importer to avoid downloading a file it cannot read. Unbound platforms
+      // may be configured in the destination; bound accounts must stay unambiguous here.
+      const referenceAccounts=[...state.accounts];
+      for(const row of items)for(const n of row.networks)if(typeof n==='string'&&!referenceAccounts.some(a=>a.clientId===clientId&&a.platform===n))referenceAccounts.push({id:`export-${n}`,clientId,platform:n,username:n});
+      const result=validatePostsImport(exported,clientId,referenceAccounts,true);
+      if(result.fatal||result.errors.length){notify(`No se pudo exportar: ${result.fatal||result.errors[0]}`,true);return false;}
+      const url=URL.createObjectURL(new Blob([JSON.stringify(exported,null,2)],{type:'application/json'}));
+      const name=client.name.replace(/[^a-z0-9áéíóúñ_-]+/gi,'-');
+      const a=document.createElement('a');a.href=url;a.download=`planifica-tus-redes-publicaciones-${name}-${today()}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+      notify('Publicaciones exportadas correctamente.');return true;
+    }
     async function importBackup(file) {
       if(!file)return;
       if(!/\.json$/i.test(file.name)){notify('Seleccioná un archivo de respaldo JSON (.json).',true);return;}
@@ -2721,10 +2767,10 @@
     const POSTS_FORMAT='planifica-tus-redes-publicaciones';
     const POSTS_VERSION=1;
     const IMPORT_ID=/^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$/;
-    const POST_KEYS=['importId','title','caption','networks','type','status','date'];
+    const POST_KEYS=['importId','title','caption','networks','type','status','date','contentUrl'];
     const MAX_ITEMS=10000;
     const handleKey = value => value.trim().replace(/^@/,'').toLocaleLowerCase('es');
-    function validatePostsImport(parsed,clientId){
+    function validatePostsImport(parsed,clientId,referenceAccounts=state.accounts,forExport=false){
       const client=state.clients.find(c=>c.id===clientId);
       const result={client,total:0,valid:0,items:[],duplicates:[],errors:[],fatal:''};
       const fail=message=>{result.fatal=message;return result;};
@@ -2738,8 +2784,8 @@
       if(!Array.isArray(parsed.items))return fail('"items" debe ser una lista de publicaciones.');
       if(!parsed.items.length)return fail('El archivo no contiene publicaciones.');
       result.total=parsed.items.length;
-      if(state.items.length+parsed.items.length>MAX_ITEMS)return fail(`La importación superaría el límite de ${MAX_ITEMS} contenidos guardados en este navegador.`);
-      const accounts=state.accounts.filter(a=>a.clientId===clientId),seen=new Set(),now=new Date().toISOString();
+      if(!forExport&&state.items.length+parsed.items.length>MAX_ITEMS)return fail(`La importación superaría el límite de ${MAX_ITEMS} contenidos guardados en este navegador.`);
+      const accounts=referenceAccounts.filter(a=>a.clientId===clientId),seen=new Set(),now=new Date().toISOString();
       parsed.items.forEach((row,index)=>{
         const label=`Publicación ${index+1}${isRecord(row)&&typeof row.importId==='string'?` (${row.importId})`:''}${isRecord(row)&&typeof row.title==='string'&&row.title.trim()?` «${row.title.trim().slice(0,60)}»`:''}`;
         if(!isRecord(row)){result.errors.push(`${label}: debe ser un objeto.`);return;}
@@ -2758,6 +2804,7 @@
         if(row.type!==undefined&&!Object.hasOwn(TYPES,row.type))problems.push(`"type" no válido; valores permitidos: ${Object.keys(TYPES).join(', ')}`);
         if(row.status!==undefined&&!Object.hasOwn(STATUS,row.status))problems.push(`"status" no válido; valores permitidos: ${Object.keys(STATUS).join(', ')}`);
         if(row.date!==undefined&&row.date!==null&&!validDate(row.date))problems.push('"date" debe ser null o una fecha real con formato AAAA-MM-DD');
+        if(row.contentUrl!==undefined&&!validContentUrl(row.contentUrl))problems.push('"contentUrl" debe ser un enlace web válido que empiece con https:// o http://');
         const networks=[];
         if(!Array.isArray(row.networks)||!row.networks.length)problems.push('"networks" debe ser una lista con al menos una red');
         else if(row.networks.length>MAX_NETWORKS)problems.push(`"networks" admite hasta ${MAX_NETWORKS} redes`);
@@ -2777,11 +2824,11 @@
           networks.push({platform:found[0].platform,accountId:found[0].id});
         });
         if(problems.length){result.errors.push(`${label}: ${problems.join('; ')}.`);return;}
-        const item=cleanItem(withNetworks({id:uid(),title,caption:row.caption??'',type:row.type??'post',status:row.status??'idea',date:row.date??null,clientId,importId:row.importId,createdAt:now,updatedAt:now},networks));
+        const item=cleanItem(withNetworks({id:uid(),title,caption:row.caption??'',type:row.type??'post',status:row.status??'idea',date:row.date??null,clientId,importId:row.importId,...(row.contentUrl?{contentUrl:row.contentUrl}:{}),createdAt:now,updatedAt:now},networks));
         if(!item){result.errors.push(`${label}: no es compatible con el modelo de contenido.`);return;}
         result.valid++;
         // Duplicate protection: the stable importId is remembered per client; titles are never used.
-        if(state.items.some(x=>x.clientId===clientId&&x.importId===row.importId))result.duplicates.push(label);
+        if(!forExport&&state.items.some(x=>x.clientId===clientId&&(x.importId===row.importId||(!x.importId&&x.id===row.importId))))result.duplicates.push(label);
         else result.items.push(item);
       });
       return result;
@@ -2834,6 +2881,7 @@
       if(event.target.closest('.drag-handle') && drag?.started)return;
       const btn=event.target.closest('[data-action]'); if(!btn)return;
       const a=btn.dataset.action;
+      if(a==='view-content')return;
       if(btn.tagName==='A')event.preventDefault();
       if(a==='mobile-work-tab'){changeMobileWorkTab(btn.dataset.mobileTab);return;}
       if(a==='help'){navigate('help');return;}
@@ -2865,6 +2913,7 @@
       else if(a==='mode')changeMode(btn.dataset.mode);
       else if(a==='select-date'){const date=btn.dataset.date; if(!validDate(date))return;state.selectedDate=date;workTab='day';if(state.mode==='month'&&monthTitle(date)!==monthTitle(state.focusDate))state.focusDate=date;render();if(window.innerWidth<=790)requestAnimationFrame(()=>$('mobile-calendar-panel')?.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'}));}
       else if(a==='export'){closeBackupMenu();exportBackup();}
+      else if(a==='export-posts'){closeBackupMenu();openPostsExport();}
       else if(a==='import'){closeBackupMenu();openImportDialog();}
       else if(a==='backups')toggleBackupMenu();
     }
@@ -2944,7 +2993,7 @@
     $('item-form').addEventListener('submit',submitForm);
     $('item-date').addEventListener('change',updateDateState);
     $('import-file').addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';await importBackup(file);});
-    $('desktop-brand-icon').innerHTML=icon('logo');$('mobile-brand-icon').innerHTML=icon('logo');document.querySelectorAll('.commercial-help-icon,.mobile-help-icon').forEach(el=>el.innerHTML=icon('info'));$('download-icon').innerHTML=icon('download');$('upload-icon').innerHTML=icon('upload');$('modal-close-icon').innerHTML=icon('close');$('item-text-expand').innerHTML=icon('expand');$('mobile-backup-icon').innerHTML=icon('download')+'<span>Exportar</span>';$('mobile-download').innerHTML=icon('download');$('mobile-upload').innerHTML=icon('upload');
+    $('desktop-brand-icon').innerHTML=icon('logo');$('mobile-brand-icon').innerHTML=icon('logo');document.querySelectorAll('.commercial-help-icon,.mobile-help-icon').forEach(el=>el.innerHTML=icon('info'));document.querySelectorAll('.posts-download-icon').forEach(el=>el.innerHTML=icon('download'));$('download-icon').innerHTML=icon('download');$('upload-icon').innerHTML=icon('upload');$('modal-close-icon').innerHTML=icon('close');$('item-text-expand').innerHTML=icon('expand');$('mobile-backup-icon').innerHTML=icon('download')+'<span>Exportar</span>';$('mobile-download').innerHTML=icon('download');$('mobile-upload').innerHTML=icon('upload');
     // UI accessibility only: focus stays in the modal, including when keyboard navigation wraps.
     document.addEventListener('keydown',e=>{
       if(e.key!=='Tab'||!$('modal-overlay').classList.contains('open'))return;
@@ -2957,6 +3006,7 @@
     });
     $('item-title').addEventListener('input',()=>{if($('item-title').value.trim())$('item-title').removeAttribute('aria-invalid');});
     $('item-date').addEventListener('input',()=>$('item-date').removeAttribute('aria-invalid'));
+    $('item-content-url').addEventListener('input',()=>$('item-content-url').removeAttribute('aria-invalid'));
     if(window.visualViewport){
       const fitModal=()=>{document.documentElement.style.setProperty('--visual-viewport-height',`${Math.round(window.visualViewport.height)}px`);document.documentElement.style.setProperty('--visual-viewport-offset-top',`${Math.round(window.visualViewport.offsetTop)}px`);if(!entry.hidden&&entry.contains(document.activeElement)&&document.activeElement.matches('input,textarea,select'))requestAnimationFrame(()=>document.activeElement.scrollIntoView({block:'nearest'}));};
       window.visualViewport.addEventListener('resize',fitModal);

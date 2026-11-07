@@ -15,6 +15,8 @@ Archivo de ejemplo válido: [`ejemplo-importacion-publicaciones.json`](ejemplo-i
 5. Revisar la vista previa: cliente, publicaciones detectadas, válidas, ya importadas y errores.
 6. Pulsar **Importar N publicaciones**.
 
+Para generar el archivo desde la aplicación: **Exportar publicaciones** (junto a los respaldos) → elegir cliente → **Exportar publicaciones**. Se reutiliza el diálogo y el selector de clientes existentes porque el importador recibe un solo cliente por vez. El archivo incluye todos los contenidos de ese cliente, también las ideas sin fecha, sin aplicar los filtros de red o estado. El nombre del archivo identifica al cliente de origen; no contiene otros clientes, preferencias ni datos generales del respaldo.
+
 El archivo **no indica el cliente**: las publicaciones se agregan al cliente elegido en el paso 3. Esta modalidad no crea clientes, cuentas ni redes, y no modifica ni borra nada de lo que ya existe.
 
 ---
@@ -66,6 +68,9 @@ No se admite **ninguna otra propiedad** en el nivel principal.
 | `type` | string | No | `"post"` | «Tipo de contenido». |
 | `status` | string | No | `"idea"` | «Estado». |
 | `date` | string o `null` | No | `null` (sin fecha) | «Fecha de publicación». |
+| `contentUrl` | string | No | Sin enlace | «Enlace al contenido» (URL absoluta HTTP o HTTPS). |
+
+Si se incluye `contentUrl`, debe contener una URL web válida con `http://` o `https://`; no se aceptan valores vacíos, `null` ni otros protocolos. Para quitarlo, borrá el campo del formulario; la propiedad se omite al guardar y exportar. Los archivos anteriores sin esta propiedad siguen siendo válidos. Los enlaces se conservan también en el respaldo completo, sin cambiar su versión. Las versiones anteriores de la aplicación no reconocen `contentUrl` en la importación parcial: ambos usuarios deben usar esta versión para intercambiar archivos con enlaces.
 
 No se admite **ninguna otra propiedad** dentro de una publicación. En particular, **no** incluyas `id`, `clientId`, `accountId`, `platform`, `createdAt`, `updatedAt` ni campos inventados como `script`, `guion`, `instrucciones` o `descripcion`: el archivo se rechaza. Esta regla evita que un texto escrito en una propiedad desconocida se pierda sin aviso.
 
@@ -230,13 +235,15 @@ INSTRUCCIONES DE GRABACIÓN
 
 Comportamiento:
 
+- La exportación conserva el `importId` original. Para contenidos creados en la aplicación, usa su `id` como `importId`, sin modificar el contenido ni el almacenamiento. Si algún dato antiguo no cumple las reglas del importador (por ejemplo, un identificador incompatible), informa el error y no descarga un archivo inválido; el respaldo completo sigue disponible.
 - La aplicación guarda el `importId` en cada publicación importada.
 - Si en el **cliente de destino** ya existe una publicación con el mismo `importId`, esa publicación del archivo se informa como **«Ya importada»** y se **omite**. La publicación existente no se modifica ni se sobrescribe, aunque se haya editado después.
+- Al reimportar en el cliente de origen, también se reconoce el `id` de los contenidos creados en la aplicación que todavía no tienen `importId`.
 - Importar dos veces el mismo archivo no crea duplicados. Si todo el archivo ya fue importado, no se agrega nada.
 - Los títulos **no** se usan para detectar duplicados: dos publicaciones con el mismo título y distinto `importId` se importan las dos.
 - Si se elimina una publicación importada, volver a importar el archivo la crea de nuevo.
 - La detección es por cliente: el mismo archivo importado en **otro** cliente crea publicaciones nuevas en ese cliente.
-- El identificador interno (`id`) de cada publicación lo genera la aplicación; no se incluye en el archivo.
+- El identificador interno (`id`) de cada publicación importada lo genera la aplicación; no se incluye como propiedad `id` en el archivo. Los clientes y cuentas de destino conservan sus identificadores locales. La exportación identifica las cuentas vinculadas con objetos `{platform, username}`; una red sin cuenta específica se exporta como texto y el importador la vincula a la cuenta única de esa red en el destino. Si no existe o es ambigua, se debe configurar antes de importar.
 
 ---
 
@@ -258,12 +265,13 @@ Validaciones completas:
 | Nivel principal | Sólo `format`, `version` e `items`, con los valores exactos de la sección 3.1. |
 | Respaldo completo | Un respaldo exportado por la aplicación se rechaza en esta modalidad (debe usarse «Restauración completa»). |
 | `items` | Lista no vacía de objetos. |
-| Propiedades de cada publicación | Sólo las 7 de la sección 3.2. |
+| Propiedades de cada publicación | Sólo las 8 de la sección 3.2. |
 | `importId` | Ver sección 8. |
 | `title` | Texto de 1 a 120 caracteres, una sola línea. |
 | `caption` | Texto de hasta 20 000 caracteres (si está presente). |
 | `type` / `status` | Uno de los valores de la sección 4 (si está presente). |
 | `date` | `null`, ausente o fecha real `AAAA-MM-DD`. |
+| `contentUrl` | Ausente o URL web absoluta HTTP/HTTPS no vacía. |
 | `networks` | De 1 a 20 redes; cada una existente y no ambigua en el cliente; sin repetir. |
 | Capacidad | El total de contenidos guardados en el navegador no puede superar 10 000. |
 
@@ -336,6 +344,7 @@ Una para Instagram, una para TikTok y una para Instagram y TikTok. Las tres se a
           "importId": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$" },
           "title": { "type": "string", "minLength": 1, "maxLength": 120, "pattern": "^[^\\r\\n\\t]*\\S[^\\r\\n\\t]*$" },
           "caption": { "type": "string", "maxLength": 20000 },
+          "contentUrl": { "type": "string", "format": "uri", "pattern": "^[Hh][Tt][Tt][Pp][Ss]?://", "minLength": 1 },
           "networks": {
             "type": "array",
             "minItems": 1,
@@ -380,5 +389,5 @@ Una para Instagram, una para TikTok y una para Instagram y TikTok. Las tres se a
 Copiá este bloque al pedir a otra IA que genere un archivo de importación:
 
 > Generá un único objeto JSON válido (sin comentarios ni texto fuera del JSON) con esta forma exacta: `{"format": "planifica-tus-redes-publicaciones", "version": 1, "items": [...]}`.
-> Cada elemento de `items` tiene sólo estas propiedades: `importId` (obligatorio; único, estable; sólo `A-Z a-z 0-9 . - _`, empieza por letra o número, máximo 120; por ejemplo `reels-2026-11-001`), `title` (obligatorio; una línea, máximo 120 caracteres), `caption` (texto completo de hasta 20 000 caracteres; usá `\n` para saltos de línea; guion e instrucciones juntos: `"GUION DE NARRACIÓN\n…\n\nINSTRUCCIONES DE GRABACIÓN\n…"`), `networks` (obligatorio; lista con una o más redes de `instagram`, `tiktok`, `linkedin`, `facebook`, `youtube`, `pinterest`, `twitter`, `otra`; sólo las que tenga configuradas el cliente), `type` (`"reel"` para Reels), `status` (`"idea"`) y `date` (`null` si no tiene fecha; si tiene, `"AAAA-MM-DD"`).
+> Cada elemento de `items` tiene sólo estas propiedades: `importId` (obligatorio; único, estable; sólo `A-Z a-z 0-9 . - _`, empieza por letra o número, máximo 120; por ejemplo `reels-2026-11-001`), `title` (obligatorio; una línea, máximo 120 caracteres), `caption` (texto completo de hasta 20 000 caracteres; usá `\n` para saltos de línea; guion e instrucciones juntos: `"GUION DE NARRACIÓN\n…\n\nINSTRUCCIONES DE GRABACIÓN\n…"`), `networks` (obligatorio; lista con una o más redes de `instagram`, `tiktok`, `linkedin`, `facebook`, `youtube`, `pinterest`, `twitter`, `otra`; sólo las que tenga configuradas el cliente), `type` (`"reel"` para Reels), `status` (`"idea"`), `date` (`null` si no tiene fecha; si tiene, `"AAAA-MM-DD"`) y, opcionalmente, `contentUrl` (URL web HTTP/HTTPS no vacía; omitilo si no hay enlace).
 > No agregues otras propiedades (ni `id`, ni `clientId`, ni `script`, etc.). No recortes ni resumas los guiones.
